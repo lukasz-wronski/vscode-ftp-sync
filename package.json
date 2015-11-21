@@ -1,7 +1,7 @@
 {
 	"name": "ftp-sync",
 	"description": "Auto sync your work to remote FTP server",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "lukasz-wronski",
 	"engines": {
 		"vscode": "^0.10.1"
@@ -12,6 +12,7 @@
 	"categories": [
 		"Other"
 	],
+	"icon": "./icon.png",
 	"activationEvents": [
 		"onCommand:extension.ftpsyncinit",
 		"workspaceContains:.vscode/ftp-sync.json"
