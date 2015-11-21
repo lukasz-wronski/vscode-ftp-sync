@@ -8,7 +8,8 @@ var helper = {
 			host: this.config.host,
 			port: this.config.port,
 			user: this.config.username,
-			pass: this.config.password,
+			pass:
+			 this.config.password,
 		});
 	},
 	ensureDirExists: function(dirPath, callback) {
