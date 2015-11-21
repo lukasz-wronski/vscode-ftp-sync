@@ -20,7 +20,7 @@
 			"title": "Ftp-sync: Init"
 		},{
 			"command": "extension.ftpsyncsync",
-			"title": "Ftp-sync: Sync local to remote"
+			"title": "Ftp-sync: Sync Local to Remote"
 		}]
 	},
 	"devDependencies": {

@@ -2,6 +2,7 @@ var fs = require("fs");
 var vscode = require("vscode");
 var path = require("path");
 var _ = require("lodash");
+var upath = require("upath");
 
 module.exports = {
 	getConfigPath: function() {
@@ -12,7 +13,7 @@ module.exports = {
 	},
 	defaultConfig: {
 		remotePath: "./",
-		host: "ftp host",
+		host: "host",
 		username: "username",
 		password: "password",
 		port: 21,
@@ -24,21 +25,19 @@ module.exports = {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
 		return _.defaults(JSON.parse(configjson), this.defaultConfig);
 	},
-	getSyncConfig: function(filePath) {
+	getSyncConfig: function(remote, local) {
 		var config = this.getConfig();
-		var filePathDir = path.dirname(filePath);
-		var additionalIgnores = fs.readdirSync(filePathDir);
-		_.pull(additionalIgnores, path.basename(filePath));
-		var remoteFolderPostfix = path.relative(vscode.workspace.rootPath, filePathDir)
 		return {
-			local: filePathDir,
-			remote: path.join(config.remotePath, remoteFolderPostfix),
+			local: local,
+			remote: upath.toUnix(remote),
 			host: config.host,
 			port: config.port,
 			user: config.username,
 			pass: config.password,
 			connections: "2",
-			ignore: _.union(config.ignore, additionalIgnores)
+			ignore: config.ignore.map(function(ignore) {
+				return "*" + ignore + "*";
+			})
 		}
 	}
 }

@@ -16,9 +16,8 @@ module.exports = function() {
 	else
 		fs.writeFileSync(ftpconfig.getConfigPath(), JSON.stringify(ftpconfig.defaultConfig, null, 4));
 	
-	//TODO: open config file when created
-	// var configDocument = vscode.workspace.openTextDocument(configPath);
-	// configDocument.then(function() {
-	// 	vscode.window.showTextDocument(configDocument);
-	// });
+	var configDocument = vscode.workspace.openTextDocument(ftpconfig.getConfigPath());
+	configDocument.then(function(document) {
+		vscode.window.showTextDocument(document);
+	});
 }
