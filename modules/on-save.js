@@ -2,7 +2,6 @@ var vscode = require("vscode");
 var ftpconfig = require("./ftp-config");
 var path = require("path");
 var upath = require("upath");
-var Ftp = require('jsftp');
 
 module.exports = function(document) {
 	var filePath = document.uri.fsPath;
@@ -10,6 +9,7 @@ module.exports = function(document) {
 		return;
 	
 	var config = ftpconfig.getConfig();	
+	var ftpHelper = require("./ftp-helper")(config);
 	
 	if(!config.uploadOnSave)
 		return;
@@ -19,35 +19,14 @@ module.exports = function(document) {
 	}).length > 0)
 		return;
 	
-	var ftp = new Ftp({
-		host: config.host,
-		port: config.port,
-		user: config.username,
-		pass: config.password,
-	});
-	
 	var pathPostfix = path.relative(vscode.workspace.rootPath, path.dirname(filePath));
 	var fileName = path.basename(filePath);
 	var targetDir = path.join(config.remotePath, pathPostfix);
 	var targetFilepath = path.join(targetDir, fileName);
 	
-	var ensureDirExists = function(dirPath, callback) {
-		ftp.ls(upath.toUnix(dirPath), function(err, res) {
-			if(err) {
-				var parentDir = path.normalize(path.join(dirPath, ".."));
-				ensureDirExists(parentDir, function() {
-					ftp.raw.mkd(upath.toUnix(dirPath), function(err, data) {
-						if(!err) callback();
-					});
-				});
-			}
-			else
-				callback();
-		})
-	}
 	
-	ensureDirExists(targetDir, function() {
-		ftp.put(filePath, upath.toUnix(targetFilepath), function(err) {
+	ftpHelper.ensureDirExists(targetDir, function() {
+		ftpHelper.getFtp().put(filePath, upath.toUnix(targetFilepath), function(err) {
 			if(err)
 				vscode.window.showErrorMessage("Ftp-sync error: " + err)
 			else if(config.alertOnSync)
