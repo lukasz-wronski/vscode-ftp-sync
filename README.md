@@ -17,7 +17,9 @@ Performs full synchronization for selected local directory. Adds and removes fil
 
 - Command for downloading code from FTP
 - Command for upload code to FTP (unlike sync without removing files on FTP)
-- Better error handling (right now there is almost none)
+- Better error handling
 
 ### Found any bugs? Got any questions or ideas?
 Rise a ticket [here](https://github.com/lukasz-wronski/vscode-ftp-sync/issues)!
+
+Took me 6 hours to code it so don't expect much yet :)

@@ -17,9 +17,15 @@ module.exports = function() {
 			vscode.window.showInformationMessage("Ftp-sync: Sync local to remote in progress - this might take a while");
 			ftpHelper.ensureDirExists(remotePath, function() {
 				ftpsync.settings = ftpconfig.getSyncConfig(remotePath, localPath);
-				ftpsync.run(function() {
-					vscode.window.showInformationMessage("Ftp-sync: Sync local to remote complete");
-				});
+				try {
+					ftpsync.run(function() {
+						vscode.window.showInformationMessage("Ftp-sync: Sync local to remote complete");
+					});
+				}
+				catch(err)
+				{
+					vscode.window.showErrorMessage("Ftp-sync: Sync local to remote error: " + err.message);
+				}
 			});
 		}
 	}
