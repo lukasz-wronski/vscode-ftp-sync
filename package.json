@@ -2,7 +2,7 @@
 	"name": "ftp-sync",
 	"description": "Auto sync your work to remote FTP server",
 	"version": "0.0.1",
-	"publisher": "Łukasz Wroński",
+	"publisher": "lukasz-wronski",
 	"engines": {
 		"vscode": "^0.10.1"
 	},
