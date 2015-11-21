@@ -1,10 +1,13 @@
 #FTP-Sync extension for VS Code
 
-There are two commands available:
+Check out the [project page on github](https://github.com/lukasz-wronski/vscode-ftp-sync)
+
+There are two commands available so far.
+You can access them from Ctrl+Shift+P prompt.
 
 ## Ftp-sync: Init
 
-Initialize the configuration file for ftp-sync. Allows to precise FTP connection details and additional options, f.e. automatic upload on save.
+Initialize the configuration file for ftp-sync. Allows to precise FTP connection details and additional options including __automatic upload on save__.
 
 ## Ftp-sync: Sync Local to Remote
 
@@ -16,5 +19,5 @@ Performs full synchronization for selected local directory. Adds and removes fil
 - Command for upload code to FTP (unlike sync without removing files on FTP)
 - Better error handling (right now there is almost none)
 
-## Found any bugs? Got any questions or ideas?
+### Found any bugs? Got any questions or ideas?
 Rise a ticket [here](https://github.com/lukasz-wronski/vscode-ftp-sync/issues)!
