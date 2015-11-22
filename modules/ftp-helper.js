@@ -12,6 +12,11 @@ var helper = {
 			 this.config.password,
 		});
 	},
+	dirExists: function(dirPath, callback) {
+		this.getFtp().ls(upath.toUnix(dirPath), function(err, res) {
+			callback(err ? false : true);
+		});
+	},
 	ensureDirExists: function(dirPath, callback) {
 		var self = this;
 		self.getFtp().ls(upath.toUnix(dirPath), function(err, res) {

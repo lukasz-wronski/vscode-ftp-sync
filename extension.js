@@ -8,11 +8,13 @@ function activate(context) {
 	
 	var initCommand = vscode.commands.registerCommand('extension.ftpsyncinit', require('./modules/init-command'));
 	var syncCommand = vscode.commands.registerCommand('extension.ftpsyncsync', require('./modules/sync-command'));
+	var downloadCommand = vscode.commands.registerCommand('extension.ftpsyncdownload', require('./modules/download-command'));
 	
 	vscode.workspace.onDidSaveTextDocument(require('./modules/on-save'));
 	
 	context.subscriptions.push(initCommand);
 	context.subscriptions.push(syncCommand);
+	context.subscriptions.push(downloadCommand);
 }
 
 exports.activate = activate;

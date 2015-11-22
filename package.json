@@ -27,6 +27,10 @@
       {
         "command": "extension.ftpsyncsync",
         "title": "Ftp-sync: Sync Local to Remote"
+      },
+      {
+        "command": "extension.ftpsyncdownload",
+        "title": "Ftp-sync: Download remote directory"
       }
     ]
   },

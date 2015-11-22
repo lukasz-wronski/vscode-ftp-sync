@@ -8,7 +8,7 @@ var getDirectories = function(srcpath) {
   });
 }
 
-var dirpick = module.exports = function(callback, currentDir) {
+var dirpick = function(callback, currentDir) {
 	currentDir = currentDir ? currentDir : ".";
 	var selectListPrefix = currentDir != "." ? ".." : "";
 	var options = [{ label: path.join(selectListPrefix, path.basename(currentDir)), description: "Choose this folder"}];
@@ -38,3 +38,5 @@ var dirpick = module.exports = function(callback, currentDir) {
 			dirpick(callback, selectedDir);
 	});
 }
+
+module.exports = dirpick;
