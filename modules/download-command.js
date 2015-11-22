@@ -6,7 +6,7 @@ var config = ftpconfig.getConfig()
 var ftpHelper = require('./ftp-helper')(config);
 var path = require('path');
 var upath = require('upath');
-var fss = require('./ftp-sync-silencer');
+var fss = require('./ftp-sync-wrapper');
 var ftpsync = fss(require('ftpsync'));
 var mkdirp = require('mkdirp');
 

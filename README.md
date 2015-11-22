@@ -1,9 +1,5 @@
 #FTP-Sync extension for VS Code
 
-Check out the [project page on github](https://github.com/lukasz-wronski/vscode-ftp-sync)
-
-------
-
 There are three commands available so far.
 You can access them from Ctrl+Shift+P prompt.
 
@@ -23,7 +19,8 @@ Allows to download selected or root directory from FTP, might overwrite local fi
 
 ## To be added soon:
 
-- Progress indication in sync process
+- Config validation (add minimal configuration requirement)
+- Better progress indication in sync process
 - Better error handling
 - Some real life testing
 
@@ -46,6 +43,10 @@ So far this is just one weekend project so don't expect much yet :) Use at your 
 
 ## Version history
 
+- 0.1.2
+	- Basic progress indication in sync process
+	- Better error handling in sync command
+	- Github links in package.json
 - 0.1.1 
 	- All information messages moved to status bar
 	- Removed "alertOnSync" parameter from config
