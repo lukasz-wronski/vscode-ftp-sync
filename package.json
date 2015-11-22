@@ -1,33 +1,42 @@
 {
-	"name": "ftp-sync",
-	"description": "Auto sync your work to remote FTP server",
-	"version": "0.0.4",
-	"publisher": "lukasz-wronski",
-	"engines": {
-		"vscode": "^0.10.1"
-	},
-	"repository": {
-		"url": "https://github.com/lukasz-wronski/vscode-ftp-sync.git"
-	},
-	"categories": [
-		"Other"
-	],
-	"icon": "icon.png",
-	"activationEvents": [
-		"onCommand:extension.ftpsyncinit",
-		"workspaceContains:.vscode/ftp-sync.json"
-	],
-	"main": "./extension",
-	"contributes": {
-		"commands": [{
-			"command": "extension.ftpsyncinit",
-			"title": "Ftp-sync: Init"
-		},{
-			"command": "extension.ftpsyncsync",
-			"title": "Ftp-sync: Sync Local to Remote"
-		}]
-	},
-	"devDependencies": {
-		"vscode": "0.10.x"
-	}
+  "name": "ftp-sync",
+  "description": "Auto sync your work to remote FTP server",
+  "version": "0.0.4",
+  "publisher": "lukasz-wronski",
+  "engines": {
+    "vscode": "^0.10.1"
+  },
+  "repository": {
+    "url": "https://github.com/lukasz-wronski/vscode-ftp-sync.git"
+  },
+  "categories": [
+    "Other"
+  ],
+  "icon": "icon.png",
+  "activationEvents": [
+    "onCommand:extension.ftpsyncinit",
+    "workspaceContains:.vscode/ftp-sync.json"
+  ],
+  "main": "./extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.ftpsyncinit",
+        "title": "Ftp-sync: Init"
+      },
+      {
+        "command": "extension.ftpsyncsync",
+        "title": "Ftp-sync: Sync Local to Remote"
+      }
+    ]
+  },
+  "devDependencies": {
+    "vscode": "0.10.x"
+  },
+  "dependencies": {
+    "ftpsync": "0.1.7",
+    "jsftp": "1.5.3",
+    "lodash": "3.10.1",
+    "upath": "0.1.6"
+  }
 }
