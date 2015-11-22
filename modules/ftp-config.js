@@ -18,7 +18,6 @@ module.exports = {
 		password: "password",
 		port: 21,
 		uploadOnSave: false,
-		alertOnSync: false,
 		ignore: [".vscode", ".git"]
 	},
 	getConfig: function() {

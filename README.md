@@ -23,7 +23,7 @@ Allows to download selected or root directory from FTP, might overwrite local fi
 
 ## To be added soon:
 
-- Progress indication and status informations on status bar
+- Progress indication in sync process
 - Better error handling
 - Some real life testing
 
@@ -36,8 +36,20 @@ Allows to download selected or root directory from FTP, might overwrite local fi
 - Rise a ticket [here](https://github.com/lukasz-wronski/vscode-ftp-sync/issues)!
 - Contact me at vscode[at]lukaszwronski.pl
 
+I'm looking forward to get any feedback from extension users!
+
 ------
 
-So far this is just one weekend project so don't expect much yet :)
+So far this is just one weekend project so don't expect much yet :) Use at your own risk - I do not guarantee that it will work correctly!
 
-Use at your own risk - I do not guarantee that it will work correctly!
+------
+
+## Version history
+
+- 0.1.1 
+	- All information messages moved to status bar
+	- Removed "alertOnSync" parameter from config
+	- Addedd progress indication in download process
+	- Fixes in download process
+- 0.1.0 
+	- First version containing all basic features

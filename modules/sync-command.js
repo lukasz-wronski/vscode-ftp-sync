@@ -1,3 +1,4 @@
+/* global STATUS_TIMEOUT */
 var vscode = require('vscode');
 var ftpconfig = require('./ftp-config');
 var dirpick = require('./dirpick');
@@ -14,16 +15,18 @@ module.exports = function() {
 		if(dirPath) {
 			var remotePath = path.join(config.remotePath, dirPath);
 			var localPath = path.join(vscode.workspace.rootPath, dirPath);
-			vscode.window.showInformationMessage("Ftp-sync: Sync local to remote in progress - this might take a while");
+			var syncInProgress = vscode.window.setStatusBarMessage("Ftp-sync: Sync local to remote in progress - this might take a while...");
 			ftpHelper.ensureDirExists(remotePath, function() {
 				ftpsync.settings = ftpconfig.getSyncConfig(remotePath, localPath);
 				try {
 					ftpsync.run(function() {
-						vscode.window.showInformationMessage("Ftp-sync: Sync local to remote complete");
+						syncInProgress.dispose();
+						vscode.window.setStatusBarMessage("Ftp-sync: Sync local to remote complete", STATUS_TIMEOUT);
 					});
 				}
 				catch(err)
 				{
+					syncInProgress.dispose();
 					vscode.window.showErrorMessage("Ftp-sync: Sync local to remote error: " + err.message);
 				}
 			});

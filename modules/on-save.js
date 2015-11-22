@@ -1,3 +1,4 @@
+/* global STATUS_TIMEOUT */
 var vscode = require("vscode");
 var ftpconfig = require("./ftp-config");
 var path = require("path");
@@ -24,13 +25,16 @@ module.exports = function(document) {
 	var targetDir = path.join(config.remotePath, pathPostfix);
 	var targetFilepath = path.join(targetDir, fileName);
 	
+	var uploadingStatus = vscode.window.setStatusBarMessage("Ftp-sync: Uploading " + fileName + " to FTP server...");
+
 	
 	ftpHelper.ensureDirExists(targetDir, function() {
 		ftpHelper.getFtp().put(filePath, upath.toUnix(targetFilepath), function(err) {
+			uploadingStatus.dispose();
 			if(err)
-				vscode.window.showErrorMessage("Ftp-sync error: " + err)
-			else if(config.alertOnSync)
-				vscode.window.showInformationMessage("Ftp-sync: file " + fileName + " uploaded");
+				vscode.window.showErrorMessage("Ftp-sync: Uploading " + fileName + " failed: " + err);
+			else
+				vscode.window.setStatusBarMessage("Ftp-sync: " + fileName + " uploaded successfully!", STATUS_TIMEOUT);
 		});
 	});
 	

@@ -1,10 +1,11 @@
+/* global STATUS_TMEOUT */
 var vscode = require('vscode');
 var ftpconfig = require('./ftp-config');
 var fs = require('fs');
 
 module.exports = function() {
 	if(!vscode.workspace.rootPath) {
-		vscode.window.showErrorMessage("Cannot init ftp-sync without opened folder");
+		vscode.window.showErrorMessage("Ftp-sync: Cannot init ftp-sync without opened folder");
 		return;
 	}
 	
@@ -12,7 +13,7 @@ module.exports = function() {
 		fs.mkdirSync(ftpconfig.getConfigDir());
 
 	if(fs.existsSync(ftpconfig.getConfigPath()))
-		vscode.window.showWarningMessage("Ftp-sync config already exists");
+		vscode.window.setStatusBarMessage("Ftp-sync: config already exists", STATUS_TMEOUT);
 	else
 		fs.writeFileSync(ftpconfig.getConfigPath(), JSON.stringify(ftpconfig.defaultConfig, null, 4));
 	
