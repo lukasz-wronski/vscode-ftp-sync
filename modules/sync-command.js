@@ -2,14 +2,18 @@
 var vscode = require('vscode');
 var ftpconfig = require('./ftp-config');
 var dirpick = require('./dirpick');
-var config = ftpconfig.getConfig()
-var ftpHelper = require('./ftp-helper')(config);
 var path = require('path');
 var fss = require('./ftp-sync-wrapper');
 var ftpSync = fss(require('ftpsync'));
 
 
 module.exports = function() {
+	
+	if(!ftpconfig.validateConfig())
+		return;
+	
+	var config = ftpconfig.getConfig()
+	var ftpHelper = require('./ftp-helper')(config);
 	
 	var syncDir = function(dirPath) {
 		if(dirPath) {

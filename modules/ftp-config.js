@@ -24,6 +24,19 @@ module.exports = {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
 		return _.defaults(JSON.parse(configjson), this.defaultConfig);
 	},
+	validateConfig: function() {
+		if(!fs.existsSync(this.getConfigPath())) {
+			var options = ["Create ftp-sync config now...", "Nah, forget about it..."];
+			var pick = vscode.window.showQuickPick(options, { placeHolder: "No configuration file found. Run Init command first." });
+			pick.then(function(answer) {
+				if(answer == options[0])
+					require("./init-command")();
+			})
+			return false;
+		}
+		
+		return true;
+	},
 	getSyncConfig: function(remote, local) {
 		var config = this.getConfig();
 		return {

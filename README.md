@@ -43,6 +43,8 @@ So far this is just one weekend project so don't expect much yet :) Use at your 
 
 ## Version history
 
+- 0.1.3
+	- Fix for [No handler found for the command: 'extension.ftpsyncdownload'](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/1)
 - 0.1.2
 	- Basic progress indication in sync process
 	- Better error handling in sync command
