@@ -1,19 +1,19 @@
 {
   "name": "ftp-sync",
   "description": "Auto sync your work to remote FTP server",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "lukasz-wronski",
   "engines": {
     "vscode": "^0.10.1"
   },
   "bugs": {
-      "url": "https://github.com/lukasz-wronski/vscode-ftp-sync/issues",
-      "email": "vscode@lukaszwronski.pl"
+    "url": "https://github.com/lukasz-wronski/vscode-ftp-sync/issues",
+    "email": "vscode@lukaszwronski.pl"
   },
   "homepage": "https://github.com/lukasz-wronski/vscode-ftp-sync/blob/master/README.md",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/lukasz-wronski/vscode-ftp-sync.git"
+    "type": "git",
+    "url": "https://github.com/lukasz-wronski/vscode-ftp-sync.git"
   },
   "categories": [
     "Other"
@@ -49,6 +49,7 @@
     "ftpsync": "0.1.7",
     "jsftp": "1.5.3",
     "lodash": "3.10.1",
+    "mkdirp": "^0.5.1",
     "upath": "0.1.6"
   }
 }
