@@ -118,7 +118,20 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 				filesToRemove.push(toFile.name);
 		});
 
-	console.log(filesToUpdate);
+	callback(null, {
+		filesToUpdate: filesToUpdate,
+		filesToAdd: filesToAdd,
+		dirsToAdd: dirsToAdd, 
+		filesToRemove: filesToRemove,
+		dirsToRemove: dirsToRemove,
+		totalOperations: function() {
+			return this.filesToUpdate.length
+				+ this.filesToAdd.length
+				+ this.dirsToAdd.length 
+				+ this.filesToRemove.length 
+				+ this.dirsToRemove.length 
+		}
+	});
 }
 
 var prepareSync = function(options, callback) {
