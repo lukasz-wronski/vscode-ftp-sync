@@ -13,22 +13,13 @@ module.exports = function() {
 		return;
 	
 	var config = ftpconfig.getConfig()
-	var ftpHelper = require('./ftp-helper')(config);
+	var syncHelper = require('./sync-helper')(config);
 	
 	var syncDir = function(dirPath) {
 		if(dirPath) {
-			var remotePath = path.join(config.remotePath, dirPath);
-			var localPath = path.join(vscode.workspace.rootPath, dirPath);
-			ftpHelper.ensureDirExists(remotePath, function() {
-				ftpSync.reportProgress = true;
-				ftpSync.settings = ftpconfig.getSyncConfig(remotePath, localPath);
-				ftpSync.run(function(err) {	
-					if(err) {
-						vscode.window.showErrorMessage("Ftp-sync: Sync local to remote error: " + err);
-						if(ftpSync.progressStatus)
-							ftpSync.progressStatus.dispose();
-					}
-				});
+			syncHelper.prepareSync({
+				remotePath: path.join(config.remotePath, dirPath),
+				localPath: path.join(vscode.workspace.rootPath, dirPath)
 			});
 		}
 	}
