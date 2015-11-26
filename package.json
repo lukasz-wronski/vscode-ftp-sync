@@ -21,7 +21,7 @@
   "icon": "icon.png",
   "activationEvents": [
     "onCommand:extension.ftpsyncinit",
-    "onCommand:extension.ftpsyncsync",
+    "onCommand:extension.ftpsyncupload",
     "onCommand:extension.ftpsyncdownload",
     "workspaceContains:.vscode/ftp-sync.json"
   ],
@@ -33,12 +33,12 @@
         "title": "Ftp-sync: Init"
       },
       {
-        "command": "extension.ftpsyncsync",
-        "title": "Ftp-sync: Sync Local to Remote"
+        "command": "extension.ftpsyncupload",
+        "title": "Ftp-sync: Local to Remote"
       },
       {
         "command": "extension.ftpsyncdownload",
-        "title": "Ftp-sync: Download remote directory"
+        "title": "Ftp-sync: Remote to Local"
       }
     ]
   },
@@ -46,6 +46,7 @@
     "vscode": "0.10.x"
   },
   "dependencies": {
+    "fs-walk": "0.0.1",
     "ftpimp": "^2.2.32",
     "ftpsync": "0.1.7",
     "jsftp": "1.5.3",

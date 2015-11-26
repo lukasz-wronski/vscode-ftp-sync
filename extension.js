@@ -9,8 +9,8 @@ global.STATUS_TIMEOUT = 3000;
 function activate(context) {
 	
 	var initCommand = vscode.commands.registerCommand('extension.ftpsyncinit', require('./modules/init-command'));
-	var syncCommand = vscode.commands.registerCommand('extension.ftpsyncsync', require('./modules/sync-command'));
-	var downloadCommand = vscode.commands.registerCommand('extension.ftpsyncdownload', require('./modules/download-command'));
+	var syncCommand = vscode.commands.registerCommand('extension.ftpsyncupload', function() { require('./modules/sync-command')(true) });
+	var downloadCommand = vscode.commands.registerCommand('extension.ftpsyncdownload', function() { require('./modules/sync-command')(false) });
 	
 	vscode.workspace.onDidSaveTextDocument(require('./modules/on-save'));
 	
