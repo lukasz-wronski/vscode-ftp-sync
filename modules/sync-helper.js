@@ -5,6 +5,7 @@ var mkdirp = require("mkdirp");
 var fswalk = require('fs-walk');
 var _ = require('lodash');
 var Ftp = require('ftpimp');
+var minimatch = require('minimatch');
 
 var ftp;
 
@@ -46,19 +47,23 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath) {
 			callback(null, result);
 		}
 		
+		var listNextSubdir = function() {
+			var subdir = subdirs.pop();
+			var subPath = upath.toUnix(path.join(remotePath, subdir.filename));
+			listRemoteFiles(subPath, function(err, subResult) {
+				if(err) { callback(err); return; }
+				result = _.union(result, subResult)	
+				if(subdirs.length == 0)
+					finish();
+				else
+					listNextSubdir();
+			}, originalRemotePath);
+		}
+		
 		if(subdirs.length == 0) 
 			finish();
 		else
-			subdirs.forEach(function(subdir) {
-				var subPath = upath.toUnix(path.join(remotePath, subdir.filename));
-				listRemoteFiles(subPath, function(err, subResult) {
-					if(err) { callback(err); return; }
-					result = _.union(result, subResult)	
-					subdirs.splice(subdirs.indexOf(subdir), 1);
-					if(subdirs.length == 0)
-						finish();
-				}, originalRemotePath);
-			});
+			listNextSubdir();
 	});
 }
 
@@ -85,6 +90,19 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 
 	var from = options.upload ? localFiles : remoteFiles;
 	var to = options.upload ? remoteFiles : localFiles;
+	
+	var skipIgnores = function(file) {
+		var result = false;
+		ftpConfig.ignore.forEach(function(ignore) {
+			if(minimatch(file.name, ignore))
+				result = true;
+		});
+		console.log(result);
+		return result;
+	}
+	
+	_.remove(from, skipIgnores);
+	_.remove(to, skipIgnores);
 
 	var filesToUpdate = [];
 	var filesToAdd = [];
@@ -124,6 +142,7 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 			});
 
 	callback(null, {
+		_readMe: "Review list of sync operations, then use Ftp-sync: Commit command to accept changes",
 		filesToUpdate: filesToUpdate,
 		filesToAdd: filesToAdd,
 		dirsToAdd: dirsToAdd, 
@@ -141,8 +160,22 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 
 var onPrepareRemoteProgress, onPrepareLocalProgress;
 
+
+var connected = false;
+var connect = function(callback) {
+	if(connected)
+		callback();
+	else
+		ftp.connect(function(err) {
+			if(!err)
+				connected = true;
+			
+			callback(err);
+		});
+}
+
 var prepareSync = function(options, callback) {
-	ftp.connect(function(err) {
+	connect(function(err) {
 		if(err)
 			callback(err);
 		else
@@ -160,6 +193,7 @@ var executeSync = function(sync, callback) {
 	
 }
 
+var ftpConfig;
 var helper = {
 	prepareSync: prepareSync,
 	executeSync: executeSync,
@@ -172,12 +206,18 @@ var helper = {
 }
 
 module.exports = function(ftpconfig) {
-	ftp = Ftp.create({
-		host: ftpconfig.host,
-		port: ftpconfig.port,
-		user: ftpconfig.username,
-		pass: ftpconfig.password,
-	}, false);
+	
+	//check for config change :)
+	
+	if(!connected)
+		ftp = Ftp.create({
+			host: ftpconfig.host,
+			port: ftpconfig.port,
+			user: ftpconfig.username,
+			pass: ftpconfig.password,
+		}, false);
+	
+	ftpConfig = ftpconfig;
 	
 	return helper;
 }

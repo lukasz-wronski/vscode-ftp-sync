@@ -17,7 +17,6 @@ module.exports = function(isUpload) {
 	
 	var showSyncSummary = function(sync, options) {
 		var syncJson = JSON.stringify(sync, null, 4);
-		syncJson = "// Review list of sync operations, then use Ftp-sync: Commit command to accept changes\r\n" + syncJson;
 		var prepareSyncDocument = vscode.workspace.openTextDocument(vscode.Uri.parse("untitled:sync-summary.json"));
 		prepareSyncDocument.then(function(document) {
 			var showSyncDocument = vscode.window.showTextDocument(document);
@@ -41,7 +40,9 @@ module.exports = function(isUpload) {
 	});
 	
 	var prepareSync = function(options) {
+		var syncMessage = vscode.window.setStatusBarMessage("Ftp-sync: sync prepare in progress...");
 		syncHelper.prepareSync(options, function(err, sync) {
+			syncMessage.dispose();
 			if(prepareProgressMessage) prepareProgressMessage.dispose();
 			if(err) vscode.window.showErrorMessage("Ftp-sync: sync error: " + err);
 			else {
