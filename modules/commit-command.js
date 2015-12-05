@@ -1,12 +1,9 @@
+/* global STATUS_TIMEOUT */
 var vscode = require('vscode');
-var ftpconfig = require('./ftp-config');
-var dirpick = require('./dirpick');
-var path = require('path');
-var fss = require('./ftp-sync-wrapper');
-var ftpSync = fss(require('ftpsync'));
+var helper = require('./command-helper');
 
 
-module.exports = function() {
+module.exports = function(getSyncHelper) {
 
 	if(!vscode.window.activeTextEditor || 
 	   !vscode.window.activeTextEditor.document ||
@@ -14,9 +11,12 @@ module.exports = function() {
 		vscode.window.showErrorMessage("Ftp-sync: no operations list to commit. Run sync first.");
 		return;
 	}
-
-	var syncOptions = vscode.window.activeTextEditor.document.syncOptions;
+	
+	var options = vscode.window.activeTextEditor.document.syncOptions;
 	var syncJson = vscode.window.activeTextEditor.document.getText();
 	var sync = JSON.parse(syncJson);
-	console.log(sync);
+	
+	vscode.window.activeTextEditor.hide();
+	helper.executeSync(getSyncHelper(), sync, options);
 }
+	

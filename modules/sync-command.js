@@ -3,17 +3,12 @@ var vscode = require('vscode');
 var ftpconfig = require('./ftp-config');
 var dirpick = require('./dirpick');
 var path = require('path');
-var fss = require('./ftp-sync-wrapper');
-var ftpSync = fss(require('ftpsync'));
+var helper = require('./command-helper');
 
-
-module.exports = function(isUpload) {
+module.exports = function(isUpload, getSyncHelper) {
 	
 	if(!ftpconfig.validateConfig())
 		return;
-	
-	var config = ftpconfig.getConfig()
-	var syncHelper = require('./sync-helper')(config);
 	
 	var showSyncSummary = function(sync, options) {
 		var syncJson = JSON.stringify(sync, null, 4);
@@ -21,8 +16,16 @@ module.exports = function(isUpload) {
 		prepareSyncDocument.then(function(document) {
 			var showSyncDocument = vscode.window.showTextDocument(document);
 			showSyncDocument.then(function() {
-				vscode.window.activeTextEditor.edit(function(editBuilder) {
-					editBuilder.insert(new vscode.Position(0, 0), syncJson);
+				var edit = vscode.window.activeTextEditor.edit(function(editBuilder) {
+					editBuilder.delete(new vscode.Range(
+						new vscode.Position(0,0),
+						new vscode.Position(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER)
+					));
+				});
+				edit.then(function () {
+					vscode.window.activeTextEditor.edit(function (editBuilder) {
+						editBuilder.insert(new vscode.Position(0, 0), syncJson);
+					});
 				});
 				vscode.window.activeTextEditor.document.syncOptions = options;
 			})
@@ -30,25 +33,25 @@ module.exports = function(isUpload) {
 	}
 	
 	var prepareProgressMessage;
-	syncHelper.onPrepareRemoteProgress(function(path) {
+	getSyncHelper().onPrepareRemoteProgress(function(path) {
 		if(prepareProgressMessage) prepareProgressMessage.dispose();
 		prepareProgressMessage = vscode.window.setStatusBarMessage("Ftp-sync: collecting remote files list (" + path + ")");
 	});
-	syncHelper.opPrepareLocalProgress(function(path) {
+	getSyncHelper().onPrepareLocalProgress(function(path) {
 		if(prepareProgressMessage) prepareProgressMessage.dispose();
 		prepareProgressMessage = vscode.window.setStatusBarMessage("Ftp-sync: collecting local files list (" + path + ")");
 	});
 	
 	var prepareSync = function(options) {
 		var syncMessage = vscode.window.setStatusBarMessage("Ftp-sync: sync prepare in progress...");
-		syncHelper.prepareSync(options, function(err, sync) {
+		getSyncHelper().prepareSync(options, function(err, sync) {
 			syncMessage.dispose();
 			if(prepareProgressMessage) prepareProgressMessage.dispose();
 			if(err) vscode.window.showErrorMessage("Ftp-sync: sync error: " + err);
 			else {
 				var pickOptions = [{
 						label: "Run",
-						description: "Run all " + sync.totalOperations() + " operations now",
+						description: "Run all " + getSyncHelper().totalOperations(sync) + " operations now",
 						operation: "run"
 					}, {
 						label: "Review",
@@ -60,12 +63,12 @@ module.exports = function(isUpload) {
 					}];
 
 				var pickResult = vscode.window.showQuickPick(pickOptions, {
-					placeHolder: "There are " + sync.totalOperations() + " operations to perform"
+					placeHolder: "There are " + getSyncHelper().totalOperations(sync) + " operations to perform"
 				});
 				
 				pickResult.then(function(result) {
 					if(result && result.operation == "run")
-						syncHelper.executeSync(sync, options);
+						helper.executeSync(getSyncHelper(), sync, options)
 					else if(result && result.operation == "review")
 						showSyncSummary(sync, options);
 				})
@@ -93,7 +96,7 @@ module.exports = function(isUpload) {
 		pickResult.then(function(result) {
 			if(!result) return;
 			var syncOptions = {
-				remotePath: path.join(config.remotePath, dirPath),
+				remotePath: path.join(getSyncHelper().getConfig().remote, dirPath),
 				localPath: path.join(vscode.workspace.rootPath, dirPath),
 				upload: isUpload,
 				mode: result.mode

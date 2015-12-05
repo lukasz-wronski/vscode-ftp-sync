@@ -1,7 +1,9 @@
 #FTP-Sync extension for VS Code
 
-There are three commands available so far.
+There are four commands available.
 You can access them from Ctrl+Shift+P prompt.
+
+![img](http://i.imgur.com/W9h4pwW.gif)
 
 ## Ftp-sync: Init
 
@@ -9,25 +11,22 @@ Initialize the configuration file for ftp-sync. Allows to precise FTP connection
 
 ## Ftp-sync: Sync Local to Remote
 
-Performs full synchronization for selected local directory. Adds and removes files on FTP server to match local files structure.
+Displays synchronization wizard to configure sync operation that changes ftp files and folders to match project files.
 
-## Ftp-sync: Download remote directory
+## Ftp-sync: Sync Remote to Local
 
-Allows to download selected or root directory from FTP, might overwrite local files.
+Displays synchronization wizard to configure sync operation that changes project files and folders to match ftp files.
+
+## Ftp-sync: Commit
+
+Commits reviewed list of changes made with Sync Local to Remote or Sync Remote to Local command.
 
 --------
 
 ## To be added soon:
 
 - Config validation (add minimal configuration requirement)
-- Better progress indication in sync process
-- Better error handling
-- Some real life testing
-
-## Plans for future:
-
-- Add own or extend implementation of ftpsync library to better control the syncing process
-- Command for upload files to FTP (unlike sync without removing files on FTP)
+- More real life testing
 
 ### Found any bugs? Got any questions or ideas?
 - Rise a ticket [here](https://github.com/lukasz-wronski/vscode-ftp-sync/issues)!
@@ -43,6 +42,13 @@ So far this is just one weekend project so don't expect much yet :) Use at your 
 
 ## Version history
 
+- 0.2.0
+	- Rewritten sync mechanism
+	- Changes based on [this conversation](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/2):
+		- New sync wizard
+		- Reviewing changes before save
+		- Choose to remove orphans or not (safe sync)
+	- Fix for [uncontrolled number of ftp connections](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/4)
 - 0.1.4
 	- Fix for [No handler found for the command: 'extension.ftpsyncdownload'](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/1)
 - 0.1.2

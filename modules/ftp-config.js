@@ -18,7 +18,7 @@ module.exports = {
 		password: "password",
 		port: 21,
 		uploadOnSave: false,
-		ignore: [".vscode", ".git"]
+		ignore: ["\\.vscode","\\.git"]
 	},
 	getConfig: function() {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
@@ -37,19 +37,23 @@ module.exports = {
 		
 		return true;
 	},
-	getSyncConfig: function(remote, local) {
+	getSyncConfig: function() {
 		var config = this.getConfig();
 		return {
-			local: local,
-			remote: upath.toUnix(remote),
+			local: config.localPath,
+			remote: upath.toUnix(config.remotePath),
 			host: config.host,
 			port: config.port,
 			user: config.username,
-			pass: config.password,
-			connections: "2",
-			ignore: config.ignore.map(function(ignore) {
-				return "*" + ignore + "*";
-			})
+			password: config.password,
+			ignore: config.ignore
 		}
+	},
+	connectionChanged: function(oldConfig) {
+		var config = this.getConfig();
+		return config.host != oldConfig.host 
+			|| config.port != oldConfig.port 
+			|| config.user != oldConfig.user 
+			|| config.password != oldConfig.password;
 	}
 }

@@ -8,13 +8,32 @@ global.STATUS_TIMEOUT = 3000;
 // your extension is activated the very first time the command is executed
 function activate(context) {
 	
+	var syncHelper, currentConfig;
+	var ftpConfig = require('./modules/ftp-config');
+	
+	var getSyncHelper = function() {
+		var oldConfig = currentConfig;
+		currentConfig = ftpConfig.getSyncConfig();
+		
+		if(!syncHelper)
+			syncHelper = require('./modules/sync-helper')();
+		else if(ftpConfig.connectionChanged(oldConfig)) 
+			syncHelper.disconnect();
+		
+		syncHelper.useConfig(currentConfig)
+		
+		return syncHelper;
+	}
+	
 	var initCommand = vscode.commands.registerCommand('extension.ftpsyncinit', require('./modules/init-command'));
-	var syncCommand = vscode.commands.registerCommand('extension.ftpsyncupload', function() { require('./modules/sync-command')(true) });
-	var downloadCommand = vscode.commands.registerCommand('extension.ftpsyncdownload', function() { require('./modules/sync-command')(false) });
-	var commitCommand = vscode.commands.registerCommand('extension.ftpsynccommit', function() { require('./modules/commit-command')() });
+	var syncCommand = vscode.commands.registerCommand('extension.ftpsyncupload', function() { require('./modules/sync-command')(true, getSyncHelper) });
+	var downloadCommand = vscode.commands.registerCommand('extension.ftpsyncdownload', function() { require('./modules/sync-command')(false, getSyncHelper) });
+	var commitCommand = vscode.commands.registerCommand('extension.ftpsynccommit', function() { require('./modules/commit-command')(getSyncHelper) });
 	
-	
-	vscode.workspace.onDidSaveTextDocument(require('./modules/on-save'));
+	var onSave = require('./modules/on-save');
+	vscode.workspace.onDidSaveTextDocument(function(file) {
+		onSave(file, getSyncHelper);
+	});
 	
 	process.on('uncaughtExcepion', function (err) { vscode.window.showErrorMessage("Ftp-sync: unexpected error: " + err) });
 	
