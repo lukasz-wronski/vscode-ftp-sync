@@ -26,7 +26,13 @@ Commits reviewed list of changes made with Sync Local to Remote or Sync Remote t
 ## To be added soon:
 
 - Config validation (add minimal configuration requirement)
+- Better connection error handling
 - More real life testing
+= Bug fixes
+
+## Future plans
+
+- Integration with git-ftp
 
 ### Found any bugs? Got any questions or ideas?
 - Rise a ticket [here](https://github.com/lukasz-wronski/vscode-ftp-sync/issues)!
@@ -36,12 +42,14 @@ I'm looking forward to get any feedback from extension users!
 
 ------
 
-So far this is just one weekend project so don't expect much yet :) Use at your own risk - I do not guarantee that it will work correctly!
+Use at your own risk - I do not guarantee that it will work correctly!
 
 ------
 
 ## Version history
 
+- 0.2.1
+	- Fix for [Save on second try](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/12)
 - 0.2.0
 	- Rewritten sync mechanism
 	- Changes based on [this conversation](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/2):

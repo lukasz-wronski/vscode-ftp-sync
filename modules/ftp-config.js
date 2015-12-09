@@ -50,7 +50,7 @@ module.exports = {
 		}
 	},
 	connectionChanged: function(oldConfig) {
-		var config = this.getConfig();
+		var config = this.getSyncConfig();
 		return config.host != oldConfig.host 
 			|| config.port != oldConfig.port 
 			|| config.user != oldConfig.user 

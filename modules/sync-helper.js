@@ -286,12 +286,21 @@ var uploadFile = function(localPath, rootPath, callback) {
 	var remoteDir = upath.toUnix(path.dirname(remotePath));
 	connect(function(err) {
 		if(err) callback(err);
-		else ftp.mkdir(remoteDir, true, function(err) {
-			if(err) callback(err)
-			else ftp.put(localPath, remotePath, function(err) {
-				callback(err);
-			})
-		})
+		else ftp.cwd(remoteDir, function(err) {
+			if(!err) {
+				ftp.put(localPath, remotePath, function(err) {
+					callback(err);
+				})
+			} else if(err.code == 550) {
+				ftp.mkdir(remoteDir, true, function(err) {
+					if(err) callback(err)
+					else ftp.put(localPath, remotePath, function(err) {
+						callback(err);
+					})
+				})
+			} else
+				callback(err)
+		});
 	})
 }
 
@@ -333,7 +342,7 @@ var helper = {
 }
 
 module.exports = function(config) {
-	ftp.on('close', function() {
+	ftp.on('close', function(err) {
 		connected = false;
 	});
 	
