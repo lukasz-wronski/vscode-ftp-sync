@@ -45,6 +45,9 @@ reproduce your error and fix it without detailed informations.
 I'm looking forward to get any feedback from extension users!
 Contribution, especially on bug fixing is more than welcome!
 
+Great thanks for suggestions and help with debugging for [Martin](https://github.com/kasik96), 
+[Allan](https://github.com/EthraZa) and all other folks who reported bugs or made improvement requests.
+
 ------
 
 Use at your own risk - I do not guarantee that it will work correctly!
@@ -53,6 +56,8 @@ Use at your own risk - I do not guarantee that it will work correctly!
 
 ## Version history
 
+- 0.2.4
+    - Fix for [Duplicate folder in folder we upload to](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/19)
 - 0.2.3
     - Fix for [Cant download](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/14)
 - 0.2.2

@@ -288,12 +288,12 @@ var uploadFile = function(localPath, rootPath, callback) {
 	var remoteDir = upath.toUnix(path.dirname(remotePath));
 	connect(function(err) {
 		if(err) callback(err);
-		else ftp.cwd(remoteDir, function(err) {
+		else ftp.list(remoteDir, function(err) {
 			if(!err) {
 				ftp.put(localPath, remotePath, function(err) {
 					callback(err);
 				})
-			} else if(err.code == 550) {
+			} else if(err.code == 450) {
 				ftp.mkdir(remoteDir, true, function(err) {
 					if(err) callback(err)
 					else ftp.put(localPath, remotePath, function(err) {
