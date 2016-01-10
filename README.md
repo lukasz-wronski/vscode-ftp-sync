@@ -38,7 +38,12 @@ Commits reviewed list of changes made with Sync Local to Remote or Sync Remote t
 - Rise a ticket [here](https://github.com/lukasz-wronski/vscode-ftp-sync/issues)!
 - Contact me at vscode[at]lukaszwronski.pl
 
+Please provide as much information as possible. We are dealing with
+diffrent ftp servers, file structures, file permissions, operating systems and it might be difficult to
+reproduce your error and fix it without detailed informations.
+
 I'm looking forward to get any feedback from extension users!
+Contribution, especially on bug fixing is more than welcome!
 
 ------
 
