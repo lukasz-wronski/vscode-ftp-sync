@@ -46,7 +46,8 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath) {
 		
 		var finish = function() {
 			result.forEach(function(item) { 
-				item.name = item.name.replace(originalRemotePath, ""); 
+                if(_.startsWith(originalRemotePath, item.name))
+				    item.name = item.name.replace(originalRemotePath, ""); 
 				if(item.name[0] == "/") item.name = item.name.substr(1);
 				if(onPrepareRemoteProgress) onPrepareRemoteProgress(item.name);
 			});
