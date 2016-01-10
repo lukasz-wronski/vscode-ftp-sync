@@ -2,7 +2,7 @@
 var vscode = require("vscode");
 var ftpconfig = require("./ftp-config");
 var path = require("path");
-var upath = require("upath");
+var isIgnored = require("./is-ignored");
 
 module.exports = function(document, getFtpSync) {
 	
@@ -13,12 +13,7 @@ module.exports = function(document, getFtpSync) {
 	if(!config.uploadOnSave)
 		return;
 		
-	var skip = false;
-	config.ignore.forEach(function(ignore) {
-		if(document.uri.fsPath.match(new RegExp(ignore)))
-			skip = true;
-	})
-	if(skip) return;
+	if(isIgnored(config.ignore, document.uri.fsPath)) return;
 		
 	var fileName = path.basename(document.uri.fsPath);
 	var uploadingStatus = vscode.window.setStatusBarMessage("Ftp-sync: Uploading " + fileName + " to FTP server...");

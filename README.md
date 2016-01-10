@@ -48,6 +48,8 @@ Use at your own risk - I do not guarantee that it will work correctly!
 
 ## Version history
 
+- 0.2.2
+    - Fix for [Upload on save don't track ignored files](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/15)
 - 0.2.1
 	- Fix for [Save on second try](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/12)
 - 0.2.0

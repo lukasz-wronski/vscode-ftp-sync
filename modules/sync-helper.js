@@ -6,6 +6,7 @@ var fswalk = require('fs-walk');
 var _ = require('lodash');
 var Ftp = require('ftp');
 var saveTo = require('save-to');
+var isIgnored = require('./is-ignored');
 
 var ftp = new Ftp();
 
@@ -98,13 +99,7 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 	var to = options.upload ? remoteFiles : localFiles;
 	
 	var skipIgnores = function(file) {
-		var result = false;
-		ftpConfig.ignore.forEach(function(ignore) {
-			var ignoreRegExp = new RegExp(ignore);
-			if(file.name.match(ignoreRegExp))
-				result = true;
-		});
-		return result;
+        return isIgnored(ftpConfig.ignore, path.join(options.remotePath, file.name));
 	}
 	
 	_.remove(from, skipIgnores);
