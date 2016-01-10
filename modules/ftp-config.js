@@ -18,7 +18,8 @@ module.exports = {
 		password: "password",
 		port: 21,
 		uploadOnSave: false,
-		ignore: ["\\.vscode","\\.git"]
+		ignore: ["\\.vscode","\\.git"],
+        passive: false
 	},
 	getConfig: function() {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
@@ -46,7 +47,8 @@ module.exports = {
 			port: config.port,
 			user: config.username,
 			password: config.password,
-			ignore: config.ignore
+			ignore: config.ignore,
+            passive: config.passive
 		}
 	},
 	connectionChanged: function(oldConfig) {

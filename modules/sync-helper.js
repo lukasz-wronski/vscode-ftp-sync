@@ -167,7 +167,13 @@ var connect = function(callback) {
 	if(connected == false)
 	{
 		ftp.connect(ftpConfig);
-		ftp.once('ready', function() { connected = true; callback(); });
+		ftp.once('ready', function() { 
+            connected = true; 
+            if(!ftpConfig.passive)
+                callback(); 
+            else
+                ftp._send("PASV", callback);
+        });
 		ftp.once('error', callback);
 	}
 	else 
