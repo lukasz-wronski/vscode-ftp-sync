@@ -28,7 +28,7 @@ Commits reviewed list of changes made with Sync Local to Remote or Sync Remote t
 - Config validation (add minimal configuration requirement)
 - Better connection error handling
 - More real life testing
-= Bug fixes
+- Bug fixes
 
 ## Future plans
 
@@ -38,15 +38,11 @@ Commits reviewed list of changes made with Sync Local to Remote or Sync Remote t
 - Rise a ticket [here](https://github.com/lukasz-wronski/vscode-ftp-sync/issues)!
 - Contact me at vscode[at]lukaszwronski.pl
 
-Please provide as much information as possible. We are dealing with
-diffrent ftp servers, file structures, file permissions, operating systems and it might be difficult to
-reproduce your error and fix it without detailed informations.
+Please provide as much information as possible. We are dealing with diffrent ftp servers, file structures, file permissions, operating systems and it might be difficult to reproduce your error and fix it without detailed informations.
 
-I'm looking forward to get any feedback from extension users!
-Contribution, especially on bug fixing is more than welcome!
+I'm looking forward to get any feedback from extension users! Contribution, especially on bug fixing is more than welcome!
 
-Great thanks for suggestions and help with debugging for [Martin](https://github.com/kasik96), 
-[Allan](https://github.com/EthraZa) and all other folks who reported bugs or made improvement requests.
+Great thanks for suggestions and help with debugging for [Martin](https://github.com/kasik96), [Allan](https://github.com/EthraZa), [Maxime](https://github.com/maximedupre), [suuuunto](https://github.com/suuuunto) and all other folks who reported bugs or made improvement requests.
 
 ------
 
@@ -56,6 +52,8 @@ Use at your own risk - I do not guarantee that it will work correctly!
 
 ## Version history
 
+- 0.2.5
+    - Fix for [Local to remote "Full sync" error](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/20)
 - 0.2.4
     - Fix for [Duplicate folder in folder we upload to](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/19)
 - 0.2.3
