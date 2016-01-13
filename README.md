@@ -52,6 +52,8 @@ Use at your own risk - I do not guarantee that it will work correctly!
 
 ## Version history
 
+- 0.2.6
+    - Fix for [Error: EXDEV: cross-device link not permitted on mounted drive](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/6)
 - 0.2.5
     - Fix for [Local to remote "Full sync" error](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/20)
 - 0.2.4
