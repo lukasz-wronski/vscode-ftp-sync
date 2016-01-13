@@ -5,7 +5,6 @@ var mkdirp = require("mkdirp");
 var fswalk = require('fs-walk');
 var _ = require('lodash');
 var Ftp = require('ftp');
-var saveTo = require('save-to');
 var isIgnored = require('./is-ignored');
 
 var ftp = new Ftp();
@@ -206,9 +205,14 @@ var executeSyncLocal = function(sync, options, callback) {
 		var remote = upath.toUnix(path.join(options.remotePath, fileToReplace));
 		ftp.get(remote, function(err, stream) {
 			if(err) callback(err);
-			else saveTo(stream, local, function(err) {
-				if(err) callback(err); else executeSyncLocal(sync, options, callback);
-			});
+            var writeStream = fs.createWriteStream(local);
+            stream.pipe(writeStream);
+            writeStream.on('finish', function() {
+                executeSyncLocal(sync, options, callback);
+            });
+            writeStream.on('error', function(err) {
+                callback(err);
+            });
 		});
 	}
 	
