@@ -235,7 +235,7 @@ var executeSyncLocal = function(sync, options, callback) {
 			if(err) callback(err); else executeSyncLocal(sync, options, callback);
 		});
 	} else if(sync.dirsToRemove.length > 0) {
-		var dirToRemove = sync.dirToRemove.pop();
+		var dirToRemove = sync.dirsToRemove.pop();
 		var localPath = path.join(options.localPath, dirToRemove);
 		fs.rmdir(localPath, function(err) {
 			if(err) callback(err); else executeSyncLocal(sync, options, callback);
