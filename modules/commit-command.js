@@ -16,7 +16,8 @@ module.exports = function(getSyncHelper) {
 	var syncJson = vscode.window.activeTextEditor.document.getText();
 	var sync = JSON.parse(syncJson);
 	
-	vscode.window.activeTextEditor.hide();
+    
+	vscode.commands.executeCommand("workbench.action.closeActiveEditor");
 	helper.executeSync(getSyncHelper(), sync, options);
 }
 	
