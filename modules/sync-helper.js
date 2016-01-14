@@ -297,7 +297,7 @@ var uploadFile = function(localPath, rootPath, callback) {
 				ftp.put(localPath, remotePath, function(err) {
 					callback(err);
 				})
-			} else if(err.code == 450) {
+			} else if(err.code == 450 || err.code == 550) {
 				ftp.mkdir(remoteDir, true, function(err) {
 					if(err) callback(err)
 					else ftp.put(localPath, remotePath, function(err) {
