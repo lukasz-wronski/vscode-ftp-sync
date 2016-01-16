@@ -3,6 +3,7 @@ var vscode = require("vscode");
 var path = require("path");
 var _ = require("lodash");
 var upath = require("upath");
+var output = require("./output");
 
 module.exports = {
 	getConfigPath: function() {
@@ -18,8 +19,9 @@ module.exports = {
 		password: "password",
 		port: 21,
 		uploadOnSave: false,
-		ignore: ["\\.vscode","\\.git"],
-        passive: false
+        passive: false,
+        debug: false,
+		ignore: ["\\.vscode","\\.git"]
 	},
 	getConfig: function() {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
@@ -48,7 +50,10 @@ module.exports = {
 			user: config.username,
 			password: config.password,
 			ignore: config.ignore,
-            passive: config.passive
+            passive: config.passive,
+            debug: config.debug ? function(msg) {
+                output(msg);
+            } : null
 		}
 	},
 	connectionChanged: function(oldConfig) {

@@ -6,10 +6,12 @@ var fswalk = require('fs-walk');
 var _ = require('lodash');
 var Ftp = require('ftp');
 var isIgnored = require('./is-ignored');
+var output = require("./output");
 
 var ftp = new Ftp();
 
 var listRemoteFiles = function(remotePath, callback, originalRemotePath) {
+    output("[sync-helper] listRemoteFiles");
 	remotePath = upath.toUnix(remotePath);
 	if(!originalRemotePath)
 		originalRemotePath = remotePath;
@@ -75,6 +77,7 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath) {
 }
 
 var listLocalFiles = function(localPath, callback) {
+    output("[sync-helper] listLocalFiles");
 	var files = [];
 	fswalk.walk(localPath, function(basedir, filename, stat, next) {
 		var filePath = path.join(basedir, filename);
@@ -94,7 +97,7 @@ var listLocalFiles = function(localPath, callback) {
 }
 
 var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
-
+    output("[sync-helper] prepareSyncObject");
 	var from = options.upload ? localFiles : remoteFiles;
 	var to = options.upload ? remoteFiles : localFiles;
 	
@@ -164,6 +167,7 @@ var onPrepareRemoteProgress, onPrepareLocalProgress, onSyncProgress;
 var connected = false;
 
 var connect = function(callback) {
+    output("[sync-helper] connect");
 	if(connected == false)
 	{
 		ftp.connect(ftpConfig);
@@ -172,7 +176,7 @@ var connect = function(callback) {
             if(!ftpConfig.passive)
                 callback(); 
             else
-                ftp._send("PASV", callback);
+                ftp._pasv(callback);
         });
 		ftp.once('error', callback);
 	}
@@ -182,6 +186,7 @@ var connect = function(callback) {
 
 
 var prepareSync = function(options, callback) {
+    output("[sync-helper] prepareSync");
 	connect(function(err) {
 		if(err) callback(err);
 		else listRemoteFiles(options.remotePath, function(err, remoteFiles) {
@@ -196,7 +201,7 @@ var prepareSync = function(options, callback) {
 
 
 var executeSyncLocal = function(sync, options, callback) {
-	
+	output("[sync-helper] executeSyncLocal");
 	if(onSyncProgress != null)
 		onSyncProgress(sync.startTotal - totalOperations(sync), sync.startTotal);
 	
@@ -246,7 +251,7 @@ var executeSyncLocal = function(sync, options, callback) {
 }
 
 var executeSyncRemote = function(sync, options, callback) {
-	
+	output("[sync-helper] executeSyncRemote");
 	if(onSyncProgress != null)
 		onSyncProgress(sync.startTotal - totalOperations(sync), sync.startTotal);
 	
@@ -288,6 +293,7 @@ var executeSyncRemote = function(sync, options, callback) {
 }
 
 var uploadFile = function(localPath, rootPath, callback) {
+    output("[sync-helper] uploadFile");
 	var remotePath = upath.toUnix(path.join(ftpConfig.remote, localPath.replace(rootPath, '')));
 	var remoteDir = upath.toUnix(path.dirname(remotePath));
 	connect(function(err) {
@@ -314,6 +320,7 @@ var uploadFile = function(localPath, rootPath, callback) {
 }
 
 var executeSync = function(sync, options, callback) {
+    output("[sync-helper] executeSync");
 	sync.startTotal = totalOperations(sync);
 	connect(function(err) {
 		if(err) callback(err);
@@ -352,6 +359,7 @@ var helper = {
 
 module.exports = function(config) {
 	ftp.on('close', function(err) {
+        output("[sync-helper] connClosed");
 		connected = false;
 	});
 	
