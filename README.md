@@ -53,7 +53,7 @@ Use at your own risk - I do not guarantee that it will work correctly!
 ## Version history
 
 - 0.2.9
-    - Fixed [https://github.com/lukasz-wronski/vscode-ftp-sync/issues/7](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/7)
+    - Fixed [After some tryes the Review file stopped to work](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/7)
     - Added debug output option to config file
     - Error message for incorrect JSON like in [this issue](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/25)
     - Closing review file after commit (pointed out in [this issue](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/23))
