@@ -14,10 +14,21 @@ module.exports = function(getSyncHelper) {
 	
 	var options = vscode.window.activeTextEditor.document.syncOptions;
 	var syncJson = vscode.window.activeTextEditor.document.getText();
-	var sync = JSON.parse(syncJson);
-	
     
-	vscode.commands.executeCommand("workbench.files.action.closeFile");
-	helper.executeSync(getSyncHelper(), sync, options);
+    var jsonCorrect = true;
+    try
+    {
+	   var sync = JSON.parse(syncJson);
+    }
+    catch(err) 
+    {
+        vscode.window.showErrorMessage("Ftp-sync: review file is not a correct JSON (" + err.message + ")");
+        jsonCorrect = false;
+    }
+
+    if(jsonCorrect) {
+        vscode.commands.executeCommand("workbench.files.action.closeFile");
+        helper.executeSync(getSyncHelper(), sync, options);
+    }
 }
 	
