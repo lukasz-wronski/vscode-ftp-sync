@@ -147,6 +147,7 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 
 	callback(null, {
 		_readMe: "Review list of sync operations, then use Ftp-sync: Commit command to accept changes",
+        _warning: "This file should not be saved, reopened review file won't work!",
 		filesToUpdate: filesToUpdate,
 		filesToAdd: filesToAdd,
 		dirsToAdd: dirsToAdd, 

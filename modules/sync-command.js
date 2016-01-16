@@ -12,7 +12,9 @@ module.exports = function(isUpload, getSyncHelper) {
 	
 	var showSyncSummary = function(sync, options) {
 		var syncJson = JSON.stringify(sync, null, 4);
-		var prepareSyncDocument = vscode.workspace.openTextDocument(vscode.Uri.parse("untitled:sync-summary.json"));
+        var filePath = path.normalize(vscode.workspace.rootPath + "/.vscode/sync-summary-" + Math.floor(Date.now() / 1000) + ".json");
+		var uri = vscode.Uri.parse("untitled:" + filePath);
+        var prepareSyncDocument = vscode.workspace.openTextDocument(uri);
 		prepareSyncDocument.then(function(document) {
 			var showSyncDocument = vscode.window.showTextDocument(document);
 			showSyncDocument.then(function() {
@@ -28,8 +30,12 @@ module.exports = function(isUpload, getSyncHelper) {
 					});
 				});
 				vscode.window.activeTextEditor.document.syncOptions = options;
-			})
-		});
+			}, function(err) {
+            vscode.window.showErrorMessage("Ftp-sync: sync error: " + err)
+            })
+		}, function(err) {
+            vscode.window.showErrorMessage("Ftp-sync: sync error: " + err)
+        });
 	}
 	
 	var prepareProgressMessage;
