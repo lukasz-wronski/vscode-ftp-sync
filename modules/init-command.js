@@ -1,4 +1,3 @@
-/* global STATUS_TMEOUT */
 var vscode = require('vscode');
 var ftpconfig = require('./ftp-config');
 var fs = require('fs');
@@ -14,7 +13,7 @@ module.exports = function() {
 		fs.mkdirSync(ftpconfig.getConfigDir());
 
 	if(fs.existsSync(ftpconfig.getConfigPath()))
-		vscode.window.setStatusBarMessage("Ftp-sync: config already exists", STATUS_TMEOUT);
+		vscode.window.showWarningMessage("Ftp-sync: config already exists");
 	else
 		fs.writeFileSync(ftpconfig.getConfigPath(), JSON.stringify(ftpconfig.defaultConfig, null, 4));
 	
