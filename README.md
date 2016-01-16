@@ -52,6 +52,9 @@ Use at your own risk - I do not guarantee that it will work correctly!
 
 ## Version history
 
+- 0.2.9
+    - Fix for [uploadOnSave will fail for files on new created folders](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/22)
+    - Added ES6 support in extension source
 - 0.2.8
     - Attempt to fix [uploadOnSave will fail for files on new created folders](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/22)
 - 0.2.7

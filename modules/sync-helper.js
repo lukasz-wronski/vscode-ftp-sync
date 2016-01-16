@@ -291,22 +291,25 @@ var uploadFile = function(localPath, rootPath, callback) {
 	var remotePath = upath.toUnix(path.join(ftpConfig.remote, localPath.replace(rootPath, '')));
 	var remoteDir = upath.toUnix(path.dirname(remotePath));
 	connect(function(err) {
-		if(err) callback(err);
-		else ftp.list(remoteDir, function(err) {
-			if(!err) {
-				ftp.put(localPath, remotePath, function(err) {
-					callback(err);
-				})
-			} else if(err.code == 450 || err.code == 550) {
-				ftp.mkdir(remoteDir, true, function(err) {
-					if(err) callback(err)
-					else ftp.put(localPath, remotePath, function(err) {
+        if(err) callback(err);
+        var putFile = function() {
+            ftp.put(localPath, remotePath, function(err) {
 						callback(err);
-					})
-				})
-			} else
-				callback(err)
-		});
+			})
+        }
+        if(remoteDir != ".")
+            ftp.list(path.join(remoteDir, ".."), function(err, list) {
+                if(err) callback(err);
+                else if(_.any(list, f => f.name == path.basename(remoteDir)))
+                    putFile();
+                else
+                    ftp.mkdir(remoteDir, true, function(err) {
+                        if(err) callback(err)
+                        else putFile();
+                    })
+            });
+         else
+            putFile();
 	})
 }
 
