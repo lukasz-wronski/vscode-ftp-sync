@@ -35,7 +35,6 @@ function activate(context) {
 		onSave(file, getSyncHelper);
 	});
 	
-	process.on('uncaughtExcepion', function (err) { vscode.window.showErrorMessage("Ftp-sync: unexpected error: " + err) });
 	
 	context.subscriptions.push(initCommand);
 	context.subscriptions.push(syncCommand);

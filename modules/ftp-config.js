@@ -51,6 +51,7 @@ module.exports = {
 			password: config.password,
 			ignore: config.ignore,
             passive: config.passive,
+            protocol: config.protocol || "ftp",
             debug: config.debug ? function(msg) {
                 output(msg);
             } : null
