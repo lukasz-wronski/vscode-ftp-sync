@@ -7,7 +7,7 @@ You can access them from Ctrl+Shift+P prompt.
 
 ## Ftp-sync: Init
 
-Initialize the configuration file for ftp-sync. Allows to precise FTP connection details and additional options including __automatic upload on save__.
+Initialize the configuration file for ftp-sync. Allows to precise FTP connection details and additional options including __automatic upload on save__. Protocol can be set to __ftp__ or __sftp__.
 
 ## Ftp-sync: Sync Local to Remote
 
@@ -52,6 +52,10 @@ Use at your own risk - I do not guarantee that it will work correctly!
 
 ## Version history
 
+- 0.3.0 
+    - Added [SFTP protocol support](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/26)
+    - Improvement of sync performance in environments with many nested directories
+    - Fix for problems with upload on save on unsynced directories
 - 0.2.9
     - Fix for [Running the contributed command:'extension.ftpsyncinit' failed](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/3)
     - Fix for [After some tryes the Review file stopped to work](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/7)

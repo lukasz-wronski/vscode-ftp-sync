@@ -1,7 +1,7 @@
 {
   "name": "ftp-sync",
   "description": "Auto sync your work to remote FTP server",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "publisher": "lukasz-wronski",
   "engines": {
     "vscode": "^0.10.1"
@@ -56,6 +56,8 @@
     "ftp": "^0.3.10",
     "lodash": "3.10.1",
     "mkdirp": "^0.5.1",
+    "ssh2": "^0.4.13",
+    "stat-mode": "^0.2.1",
     "upath": "0.1.6"
   }
 }
