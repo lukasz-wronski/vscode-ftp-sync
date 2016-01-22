@@ -265,16 +265,16 @@ var executeSyncRemote = function(sync, options, callback) {
 	}
 	
 	if(sync.dirsToAdd.length > 0) {
-		var dirToAdd = sync.dirsToAdd.pop();	
+		var dirToAdd = sync.dirsToAdd.shift();	
 		var remotePath = upath.toUnix(path.join(options.remotePath, dirToAdd));
-		ftp.mkdir(remotePath, true, function(err) {
+		ftp.mkdir(remotePath, function(err) {
 			if(err) callback(err); else executeSyncRemote(sync, options, callback);
 		})
 	} else if(sync.filesToAdd.length > 0) {
-		var fileToAdd = sync.filesToAdd.pop();
+		var fileToAdd = sync.filesToAdd.shift();
 		replaceFile(fileToAdd);
 	} else if(sync.filesToUpdate.length > 0) {
-		var fileToUpdate = sync.filesToUpdate.pop();
+		var fileToUpdate = sync.filesToUpdate.shift();
 		replaceFile(fileToUpdate);
 	} else if(sync.filesToRemove.length > 0) {
 		var fileToRemove = sync.filesToRemove.pop();
@@ -285,12 +285,28 @@ var executeSyncRemote = function(sync, options, callback) {
 	} else if(sync.dirsToRemove.length > 0) {
 		var dirToRemove = sync.dirsToRemove.pop();
 		var remotePath = upath.toUnix(path.join(options.remotePath, dirToRemove));
-		ftp.rmdir(remotePath, true, function(err) {
+		ftp.rmdir(remotePath, function(err) {
 			if(err) callback(err); else executeSyncRemote(sync, options, callback);
 		});
 	} else {
 		callback();
 	}
+}
+
+var ensureDirExists = function(remoteDir, callback) {
+    ftp.list(path.posix.join(remoteDir, ".."), function(err, list) {
+        if(err)
+            ensureDirExists(path.posix.join(remoteDir, ".."), function() {
+                ensureDirExists(remoteDir, callback);
+            });
+        else if(_.any(list, f => f.name == path.basename(remoteDir)))
+            callback();
+        else
+            ftp.mkdir(remoteDir, function(err) {
+                if(err) callback(err)
+                else callback();
+            })
+    });
 }
 
 var uploadFile = function(localPath, rootPath, callback) {
@@ -305,16 +321,10 @@ var uploadFile = function(localPath, rootPath, callback) {
 			})
         }
         if(remoteDir != ".")
-            ftp.list(path.join(remoteDir, ".."), function(err, list) {
+            ensureDirExists(remoteDir, function(err) {
                 if(err) callback(err);
-                else if(_.any(list, f => f.name == path.basename(remoteDir)))
-                    putFile();
-                else
-                    ftp.mkdir(remoteDir, true, function(err) {
-                        if(err) callback(err)
-                        else putFile();
-                    })
-            });
+                else putFile();
+            })
          else
             putFile();
 	})

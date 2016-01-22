@@ -18,6 +18,7 @@ module.exports = {
 		username: "username",
 		password: "password",
 		port: 21,
+        protocol: "ftp",
 		uploadOnSave: false,
         passive: false,
         debug: false,

@@ -2,6 +2,7 @@ module.exports = function() {
     var self = this;
     
     var Mode = require('stat-mode');
+    var path = require('path');
     var Client = require('ssh2').Client;
     var client = new Client();
     var sftp;
@@ -42,8 +43,8 @@ module.exports = function() {
         client.once('close', callback);
     }
     
-    self.list = function(path, callback) {
-        sftp.readdir(path, function(err, result) {
+    self.list = function(remote, callback) {
+        sftp.readdir(remote, function(err, result) {
             if(!err) result = result.map(f => {
                 return { 
                     name: f.filename,
@@ -63,16 +64,16 @@ module.exports = function() {
         sftp.fastPut(local, remote, callback)
     }
     
-    self.mkdir = function(path, recursive, callback) {
-        sftp.mkdir(path, callback) //TODO: make recursive
+    self.mkdir = function(remote, callback) {
+        sftp.mkdir(remote, callback);
     }
     
-    self.delete = function(path, callback) {
-        sftp.unlink(path, callback)
+    self.delete = function(remote, callback) {
+        sftp.unlink(remote, callback)
     }
     
-    self.rmdir = function(path, callback) {
-        sftp.rmdir(path, callback)
+    self.rmdir = function(remote, callback) {    
+        sftp.rmdir(remote, callback)
     }
    
 }
