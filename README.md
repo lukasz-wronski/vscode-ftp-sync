@@ -52,6 +52,8 @@ Use at your own risk - I do not guarantee that it will work correctly!
 
 ## Version history
 
+- 0.3.1
+    - Added [SFTP private key support](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/28)
 - 0.3.0 
     - Added [SFTP protocol support](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/26)
     - Improvement of sync performance in environments with many nested directories

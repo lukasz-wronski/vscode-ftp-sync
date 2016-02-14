@@ -2,17 +2,26 @@ module.exports = function() {
     var self = this;
     
     var Mode = require('stat-mode');
-    var path = require('path');
     var Client = require('ssh2').Client;
     var client = new Client();
     var sftp;
     
     self.connect = function(ftpConfig) {
+        
+        try {
+            var privateKey = ftpConfig.privateKeyPath ? require('fs').readFileSync(ftpConfig.privateKeyPath) : undefined;
+        }
+        catch(err) {
+            process.nextTick(function() { onErrorHandler(err); });
+            return;
+        }
+        
         client.connect({
             host: ftpConfig.host,
             port: ftpConfig.port,
             username: ftpConfig.user,
-            password: ftpConfig.password
+            password: ftpConfig.password,
+            privateKey: privateKey
         });
     }
     
@@ -20,7 +29,9 @@ module.exports = function() {
         client.once('ready', callback);
     }  
     
+    var onErrorHandler;
     self.onerror = function(callback) {
+        onErrorHandler = callback;
         client.once('error', callback);
     }
     

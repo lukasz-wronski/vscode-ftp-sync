@@ -22,6 +22,7 @@ module.exports = {
 		uploadOnSave: false,
         passive: false,
         debug: false,
+        privateKeyPath: null,
 		ignore: ["\\.vscode","\\.git"]
 	},
 	getConfig: function() {
@@ -53,6 +54,7 @@ module.exports = {
 			ignore: config.ignore,
             passive: config.passive,
             protocol: config.protocol || "ftp",
+            privateKeyPath: config.privateKeyPath,
             debug: config.debug ? function(msg) {
                 output(msg);
             } : null
