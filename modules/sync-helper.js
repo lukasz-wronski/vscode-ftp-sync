@@ -34,7 +34,10 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath) {
 		remoteFiles.forEach(function(fileInfo) {
 			if(fileInfo.name == "." || fileInfo.name == "..") return;
 			var remoteItemPath = upath.toUnix(path.join(remotePath, fileInfo.name));
-			if(fileInfo.type != 'd')
+			if(isIgnored(ftpConfig.ignore, remoteItemPath)) {
+                return;
+            }
+            if(fileInfo.type != 'd')
 				result.push({ 
 					name: remoteItemPath, 
 					size: fileInfo.size,
