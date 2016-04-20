@@ -23,7 +23,8 @@ module.exports = {
         passive: false,
         debug: false,
         privateKeyPath: null,
-		ignore: ["\\.vscode","\\.git"]
+		ignore: ["\\.vscode","\\.git"],
+        directorymap:{ "":"" }
 	},
 	getConfig: function() {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
