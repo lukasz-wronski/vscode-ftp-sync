@@ -206,8 +206,7 @@ var prepareSync = function(options, callback) {
 		if(err) callback(err);
 		else listRemoteFiles(options.remotePath, function(err, remoteFiles) {
 			if(err) {
-                if(err.code == 450) { // if main directory has to be created
-                    // Todo: check if directory is missing
+                if(err.code == 450) {
                     options.createTargetDirectory = true;
                 } else {
                     callback(err);
