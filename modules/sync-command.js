@@ -4,6 +4,7 @@ var ftpconfig = require('./ftp-config');
 var dirpick = require('./dirpick');
 var path = require('path');
 var helper = require('./command-helper');
+var directoryMapper = require("./directory-mapper");
 
 module.exports = function(isUpload, getSyncHelper) {
 	
@@ -84,7 +85,8 @@ module.exports = function(isUpload, getSyncHelper) {
 	}
 	
 	var prepareoptions = function(dirPath) {
-		
+        var remoteDirPath = directoryMapper.getRemotePath(dirPath);
+        
 		var pickResult = vscode.window.showQuickPick([{
 			label: "Full-sync",
 			description: "Removes orphan files on " + (isUpload ? "remote" : "local"),
@@ -102,7 +104,7 @@ module.exports = function(isUpload, getSyncHelper) {
 		pickResult.then(function(result) {
 			if(!result) return;
 			var syncOptions = {
-				remotePath: path.join(getSyncHelper().getConfig().remote, dirPath),
+				remotePath: path.join(getSyncHelper().getConfig().remote, remoteDirPath),
 				localPath: path.join(vscode.workspace.rootPath, dirPath),
 				upload: isUpload,
 				mode: result.mode

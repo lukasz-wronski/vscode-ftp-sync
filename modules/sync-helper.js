@@ -8,6 +8,7 @@ var isIgnored = require('./is-ignored');
 var output = require("./output");
 var FtpWrapper = require("./ftp-wrapper");
 var SftpWrapper = require("./sftp-wrapper");
+var directoryMapper = require("./directory-mapper");
 
 var ftp;
 
@@ -18,9 +19,9 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath) {
 		originalRemotePath = remotePath;
 	ftp.list(remotePath, function(err, remoteFiles) {
 		if(err) { 
-			if(err.code == 450)
-				callback(null, []);
-			else
+            if(err.code == 450)
+				callback(err, []);
+            else
 				callback(err); 
 			return; 
 		}
@@ -117,7 +118,8 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 	var dirsToAdd = [];
 	var filesToRemove = [];
 	var dirsToRemove = [];
-	
+    var createTargetDirectory = (options.createTargetDirectory !== undefined)? options.createTargetDirectory:false;
+    
 	if(options.mode == "force")
 		from.forEach(function(fromFile) {
 			var toEquivalent = to.find(function(toFile) { return toFile.name == fromFile.name });
@@ -148,7 +150,7 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 				else
 					filesToRemove.push(toFile.name);
 			});
-
+            
 	callback(null, {
 		_readMe: "Review list of sync operations, then use Ftp-sync: Commit command to accept changes",
         _warning: "This file should not be saved, reopened review file won't work!",
@@ -156,7 +158,8 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 		filesToAdd: filesToAdd,
 		dirsToAdd: dirsToAdd, 
 		filesToRemove: filesToRemove,
-		dirsToRemove: dirsToRemove
+		dirsToRemove: dirsToRemove,
+        createTargetDirectory: createTargetDirectory
 	});
 }
 
@@ -198,11 +201,19 @@ var connect = function(callback) {
 
 var prepareSync = function(options, callback) {
     output("[sync-helper] prepareSync");
+    
 	connect(function(err) {
 		if(err) callback(err);
 		else listRemoteFiles(options.remotePath, function(err, remoteFiles) {
-			if(err) callback(err);
-			else listLocalFiles(options.localPath, function(err, localFiles) {
+			if(err) {
+                if(err.code == 450) {
+                    options.createTargetDirectory = true;
+                } else {
+                    callback(err);
+                    return
+                }
+            }
+			listLocalFiles(options.localPath, function(err, localFiles) {
 				if(err) callback(err);
 				else prepareSyncObject(remoteFiles, localFiles, options, callback);
 			})
@@ -266,7 +277,7 @@ var executeSyncRemote = function(sync, options, callback) {
 			if(err) callback(err); else executeSyncRemote(sync, options, callback);
 		});
 	}
-	
+    
 	if(sync.dirsToAdd.length > 0) {
 		var dirToAdd = sync.dirsToAdd.shift();	
 		var remotePath = upath.toUnix(path.join(options.remotePath, dirToAdd));
@@ -314,7 +325,9 @@ var ensureDirExists = function(remoteDir, callback) {
 
 var uploadFile = function(localPath, rootPath, callback) {
     output("[sync-helper] uploadFile");
-	var remotePath = upath.toUnix(path.join(ftpConfig.remote, localPath.replace(rootPath, '')));
+	var remotePath = upath.toUnix(
+            path.join(ftpConfig.remote, directoryMapper.getRemotePath(path.relative(rootPath, localPath)))
+        );
 	var remoteDir = upath.toUnix(path.dirname(remotePath));
 	connect(function(err) {
         if(err) callback(err);
@@ -338,9 +351,14 @@ var executeSync = function(sync, options, callback) {
 	sync.startTotal = totalOperations(sync);
 	connect(function(err) {
 		if(err) callback(err);
-		else if(options.upload) 
+		else if(options.upload)  {
+            if (sync.createTargetDirectory) {
+                ftp.mkdir(upath.toUnix(options.remotePath), true, function(err) {
+                    if(err) callback(err); else executeSyncRemote(sync, options, callback);
+                });
+            }
 			executeSyncRemote(sync, options, callback);
-		else
+        } else
 			executeSyncLocal(sync, options, callback);
 	});
 }
