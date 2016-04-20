@@ -54,8 +54,8 @@ module.exports = function() {
         ftp.put(local, remote, callback)
     }
     
-    self.mkdir = function(path, callback) {
-        ftp.mkdir(path, callback)
+    self.mkdir = function(path, recursive, callback) {
+        ftp.mkdir(path, recursive, callback)
     }
     
     self.delete = function(path, callback) {
