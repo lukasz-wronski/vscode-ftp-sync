@@ -20,7 +20,7 @@ Initializes a default FTP-Sync configuration file in the `.vscode` directory. Op
 - passive - Specifies whether to use FTP passive mode. The default is `false`.
 - debug - Specifies whether to display debug information in an ftp-sync Output window. The default is `false`.
 - privateKeyPath - Specifies the path to the private key for SFTP. The default is `null`.
-- ignore - An array of escaped regular expression strings specifying paths to ignore. If a path matches any of these regular expressions then it will not be included in the sync. Default values are `"\\.git"` and `"\\.vscode"`.
+- ignore - An array of escaped regular expression strings specifying paths to ignore. If a path matches any of these regular expressions then it will not be included in the sync. Default values are `"\\.git"`, `"\\.vscode"` and `".DS_Store"`.
 
 ### Ftp-sync: Sync Local to Remote
 Displays a synchronization wizard to configure a sync operation that changes FTP files and folders to match project files.
