@@ -52,6 +52,7 @@ module.exports = {
 			port: config.port,
 			user: config.username,
 			password: config.password,
+			passphrase: config.passphrase,
 			ignore: config.ignore,
             passive: config.passive,
             protocol: config.protocol || "ftp",
