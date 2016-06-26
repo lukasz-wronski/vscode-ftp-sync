@@ -21,7 +21,8 @@ module.exports = function() {
             port: ftpConfig.port,
             username: ftpConfig.user,
             password: ftpConfig.password,
-            privateKey: privateKey
+            privateKey: privateKey,
+            passphrase: ftpConfig.passphrase
         });
     }
     
