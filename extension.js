@@ -29,6 +29,7 @@ function activate(context) {
 	var syncCommand = vscode.commands.registerCommand('extension.ftpsyncupload', function() { require('./modules/sync-command')(true, getSyncHelper) });
 	var downloadCommand = vscode.commands.registerCommand('extension.ftpsyncdownload', function() { require('./modules/sync-command')(false, getSyncHelper) });
 	var commitCommand = vscode.commands.registerCommand('extension.ftpsynccommit', function() { require('./modules/commit-command')(getSyncHelper) });
+	var singleCommand = vscode.commands.registerTextEditorCommand('extension.ftpsyncsingle', function(editor) { require('./modules/sync-single-command')(editor, getSyncHelper) });
 	
 	var onSave = require('./modules/on-save');
 	vscode.workspace.onDidSaveTextDocument(function(file) {
@@ -40,6 +41,7 @@ function activate(context) {
 	context.subscriptions.push(syncCommand);
 	context.subscriptions.push(downloadCommand);
 	context.subscriptions.push(commitCommand);
+	context.subscriptions.push(singleCommand);
 }
 
 exports.activate = activate;
