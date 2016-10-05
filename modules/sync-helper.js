@@ -11,14 +11,35 @@ var SftpWrapper = require("./sftp-wrapper");
 
 var ftp;
 
-//add options 
+// This are the uncompleted requests.
+var openListRemoteFilesRequsts = 0;
+
+//add options
 var listRemoteFiles = function(remotePath, callback, originalRemotePath, options) {
     output("[sync-helper] listRemoteFiles");
 	remotePath = upath.toUnix(remotePath);
-	if(!originalRemotePath)
+	if(!originalRemotePath) {
 		originalRemotePath = remotePath;
+
+		// Overwrite original callback to execute only if all open request are finish
+		var oldCallback = callback;
+		callback = function (error, result) {
+			if (openListRemoteFilesRequsts === 0) {
+				oldCallback(error, result);
+			}
+		}
+
+	}
+
+	// Add a new open request
+	openListRemoteFilesRequsts += 1;
+
 	ftp.list(remotePath, function(err, remoteFiles) {
-		if(err) { 
+
+		// The request is finish so remove it
+		openListRemoteFilesRequsts -= 1;
+
+		if(err) {
 			if(err.code == 450)
 				callback(null, []);
 			else
@@ -62,7 +83,7 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath, options
 		}
 		
 		var listNextSubdir = function() {
-			var subdir = subdirs.pop();
+			var subdir = subdirs.shift();
 			var subPath = upath.toUnix(path.join(remotePath, subdir.name));
 			listRemoteFiles(subPath, function(err, subResult) {
 				if(err) { callback(err); return; }
@@ -81,7 +102,7 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath, options
 	});
 }
 
-//add options 
+//add options
 var listLocalFiles = function(localPath, callback, options) {
     output("[sync-helper] listLocalFiles");
 	var files = [];
