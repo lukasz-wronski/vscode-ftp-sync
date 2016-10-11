@@ -46,10 +46,10 @@
         "command": "extension.ftpsynccommit",
         "title": "Ftp-sync: Commit"
       },
-			{
-				"command": "extension.ftpsyncuploadselected",
-				"title": "Ftp-sync: Upload File"
-			}
+      {
+        "command": "extension.ftpsyncuploadselected",
+        "title": "Ftp-sync: Upload File"
+      }
     ],
     "menus": {
       "explorer/context": [
