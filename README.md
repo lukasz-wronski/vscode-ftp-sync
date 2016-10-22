@@ -53,6 +53,7 @@ Use at your own risk - I do not guarantee that it will work correctly!
 ## Version history
 - 0.3.2
     - Added [FTP over SSL support](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/62)
+    - Added [Sync current file to Remote](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/77)
 - 0.3.1
     - Added [SFTP private key support](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/28)
 - 0.3.0 
