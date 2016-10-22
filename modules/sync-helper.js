@@ -11,7 +11,8 @@ var SftpWrapper = require("./sftp-wrapper");
 
 var ftp;
 
-var listRemoteFiles = function(remotePath, callback, originalRemotePath) {
+//add options 
+var listRemoteFiles = function(remotePath, callback, originalRemotePath, options) {
     output("[sync-helper] listRemoteFiles");
 	remotePath = upath.toUnix(remotePath);
 	if(!originalRemotePath)
@@ -32,12 +33,12 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath) {
 			callback(null, result);
 		
 		remoteFiles.forEach(function(fileInfo) {
+			//when listing remoteFiles by onPrepareRemoteProgress, ignore remoteFiles
+			if (isIgnored(ftpConfig.ignore, path.join(options.remotePath, fileInfo.name))) return;
+
 			if(fileInfo.name == "." || fileInfo.name == "..") return;
 			var remoteItemPath = upath.toUnix(path.join(remotePath, fileInfo.name));
-			if(isIgnored(ftpConfig.ignore, remoteItemPath)) {
-                return;
-            }
-            if(fileInfo.type != 'd')
+			if(fileInfo.type != 'd')
 				result.push({ 
 					name: remoteItemPath, 
 					size: fileInfo.size,
@@ -70,7 +71,7 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath) {
 					finish();
 				else
 					listNextSubdir();
-			}, originalRemotePath);
+			}, originalRemotePath, options);
 		}
 		
 		if(subdirs.length == 0) 
@@ -80,14 +81,19 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath) {
 	});
 }
 
-var listLocalFiles = function(localPath, callback) {
+//add options 
+var listLocalFiles = function(localPath, callback, options) {
     output("[sync-helper] listLocalFiles");
 	var files = [];
 	fswalk.walk(localPath, function(basedir, filename, stat, next) {
 		var filePath = path.join(basedir, filename);
+		//when listing localFiles by onPrepareLocalProgress, ignore localfile
+		if (isIgnored(ftpConfig.ignore, filePath)) return next();
+
 		filePath = filePath.replace(localPath, "");
 		filePath = upath.toUnix(filePath);
 		if(filePath[0] == "/") filePath = filePath.substr(1);
+
 		if(onPrepareLocalProgress) onPrepareLocalProgress(filePath);
 		files.push({ 
 			name: filePath, 
@@ -205,8 +211,8 @@ var prepareSync = function(options, callback) {
 			else listLocalFiles(options.localPath, function(err, localFiles) {
 				if(err) callback(err);
 				else prepareSyncObject(remoteFiles, localFiles, options, callback);
-			})
-		});
+			}, options)
+		}, null, options);
 	});
 }
 
