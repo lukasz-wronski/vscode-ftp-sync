@@ -1,24 +1,35 @@
-#FTP-Sync extension for VS Code
+# FTP-Sync extension for VS Code
 
-There are four commands available.
-You can access them from Ctrl+Shift+P prompt.
+This extension allows you to easily synchronise your local workspace (project files) with an FTP server. It also has several advanced features such as  __automatic upload on save__.
 
-![img](http://i.imgur.com/W9h4pwW.gif)
+![Demo of extension](http://i.imgur.com/W9h4pwW.gif)
 
-## Ftp-sync: Init
+## Usage
+There are four commands available. You can access them from the command palette (Ctrl+Shift+P on Windows/Linux).
 
-Initialize the configuration file for ftp-sync. Allows to precise FTP connection details and additional options including __automatic upload on save__. Protocol can be set to __ftp__ or __sftp__.
+### Ftp-sync: Init
+Initializes a default FTP-Sync configuration file in the `.vscode` directory. Options can be customised as follows:
 
-## Ftp-sync: Sync Local to Remote
+- remotePath - This can be set to the path on the remote that you would like to upload to. The default is `./` i.e. the root.
+- host - The hostname of the FTP server you want to connect to.
+- username - The username of the FTP account you want to use.
+- password - The password of the FTP account you want to use.
+- port - The port on the FTP server you would like to connect to. The default is `"21"`.
+- protocol - The FTP protocol to be used. The default is `"ftp"` but you can also specify `"sftp"`.
+- uploadOnSave - Whether files should automatically be uploaded on save. The default is `false`.
+- passive - Specifies whether to use FTP passive mode. The default is `false`.
+- debug - Specifies whether to display debug information in an ftp-sync Output window. The default is `false`.
+- privateKeyPath - Specifies the path to the private key for SFTP. The default is `null`.
+- passphrase - Specifies the passphrase to use with the private key for SFTP. The default is `null`.
+- ignore - An array of escaped regular expression strings specifying paths to ignore. If a path matches any of these regular expressions then it will not be included in the sync. Default values are `"\\.git"`, `"\\.vscode"` and `".DS_Store"`.
 
-Displays synchronization wizard to configure sync operation that changes ftp files and folders to match project files.
+### Ftp-sync: Sync Local to Remote
+Displays a synchronization wizard to configure a sync operation that changes FTP files and folders to match project files.
 
-## Ftp-sync: Sync Remote to Local
+### Ftp-sync: Sync Remote to Local
+Displays a synchronization wizard to configure a sync operation that changes project files and folders to match FTP files.
 
-Displays synchronization wizard to configure sync operation that changes project files and folders to match ftp files.
-
-## Ftp-sync: Commit
-
+### Ftp-sync: Commit
 Commits reviewed list of changes made with Sync Local to Remote or Sync Remote to Local command.
 
 --------

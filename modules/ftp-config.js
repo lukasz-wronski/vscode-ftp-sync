@@ -25,7 +25,7 @@ module.exports = {
         debug: false,
         privateKeyPath: null,
         passphrase: null,
-		ignore: ["\\.vscode","\\.git"]
+		ignore: ["\\.vscode","\\.git","\\.DS_Store"]
 	},
 	getConfig: function() {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
