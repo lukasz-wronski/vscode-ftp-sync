@@ -27,7 +27,7 @@ module.exports = function(getSyncHelper) {
     }
 
     if(jsonCorrect) {
-        vscode.commands.executeCommand("workbench.files.action.closeFile");
+        vscode.commands.executeCommand("workbench.action.closeActiveEditor");
         helper.executeSync(getSyncHelper(), sync, options);
     }
 }
