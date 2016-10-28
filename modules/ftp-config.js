@@ -29,7 +29,15 @@ module.exports = {
 	},
 	getConfig: function() {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
-		return _.defaults(JSON.parse(configjson), this.defaultConfig);
+		var configObject;
+
+		try {
+			configObject = JSON.parse(configjson);
+		}
+		catch (err){
+			vscode.window.showErrorMessage("Ftp-sync: Config file is not a valid JSON document. - " + err.message);
+		}
+		return _.defaults(configObject, this.defaultConfig);
 	},
 	validateConfig: function() {
 		if(!fs.existsSync(this.getConfigPath())) {
