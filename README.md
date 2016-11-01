@@ -70,6 +70,7 @@ Use at your own risk - I do not guarantee that it will work correctly!
     - Fixed bug #86 (by PR #84)
     - [Improved readme and fixed debug mode](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/67)
     - [Compatibility for vscode 1.5+](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/87)
+    - [Improve Error handling around parsing config file](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/102)
 - 0.3.1
     - Added [SFTP private key support](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/28)
 - 0.3.0 
