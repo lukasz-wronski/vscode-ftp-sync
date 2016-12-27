@@ -1,7 +1,7 @@
 {
   "name": "ftp-sync",
   "description": "Auto sync your work to remote FTP/SFTP server",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "publisher": "lukasz-wronski",
   "engines": {
     "vscode": "^0.10.1"
