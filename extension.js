@@ -7,7 +7,6 @@ global.STATUS_TIMEOUT = 3000;
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
-	console.log('Starting');
 	
 	var syncHelper, currentConfig;
 	var ftpConfig = require('./modules/ftp-config');
