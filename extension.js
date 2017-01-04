@@ -7,10 +7,10 @@ global.STATUS_TIMEOUT = 3000;
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
+	console.log('Starting');
 	
 	var syncHelper, currentConfig;
 	var ftpConfig = require('./modules/ftp-config');
-	
 	var getSyncHelper = function() {
 		var oldConfig = currentConfig;
 		currentConfig = ftpConfig.getSyncConfig();
@@ -31,8 +31,25 @@ function activate(context) {
 	var commitCommand = vscode.commands.registerCommand('extension.ftpsynccommit', function() { require('./modules/commit-command')(getSyncHelper) });
 	var singleCommand = vscode.commands.registerTextEditorCommand('extension.ftpsyncsingle', function(editor) { require('./modules/sync-single-command')(editor, getSyncHelper) });
 	var uploadcurrentCommand = vscode.commands.registerCommand("extension.ftpsyncuploadselected", function(fileUrl) { require('./modules/uploadcurrent-command')(fileUrl, getSyncHelper) });
-
 	var onSave = require('./modules/on-save');
+
+	var currentConfig = getSyncHelper().getConfig();
+	if (currentConfig.generatedFiles.uploadOnSave) {
+		var fsw = vscode.workspace.createFileSystemWatcher( currentConfig.getGeneratedDir() + '/**');
+		fsw.onDidChange(function(ev) {
+			//an attempt to normalize onDidChange with onDidSaveTextDocument.
+			ev['uri'] = {fsPath: ev.fsPath};
+			onSave(ev, getSyncHelper);
+		})
+		fsw.onDidCreate(function(ev) {
+			ev['uri'] = {fsPath: ev.fsPath};
+			onSave(ev, getSyncHelper);
+		})
+		fsw.onDidDelete(function(ev) {
+			ev['uri'] = {fsPath: ev.fsPath};
+			onSave(ev, getSyncHelper);
+		})
+	}
 	vscode.workspace.onDidSaveTextDocument(function(file) {
 		onSave(file, getSyncHelper);
 	});
