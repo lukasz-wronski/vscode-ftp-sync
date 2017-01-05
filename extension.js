@@ -34,7 +34,7 @@ function activate(context) {
 
 	var currentConfig = getSyncHelper().getConfig();
 	if (currentConfig.generatedFiles.uploadOnSave) {
-		var fsw = vscode.workspace.createFileSystemWatcher( currentConfig.getGeneratedDir() + '/**');
+		fsw = vscode.workspace.createFileSystemWatcher( currentConfig.getGeneratedDir() + '/**');
 		fsw.onDidChange(function(ev) {
 			//an attempt to normalize onDidChange with onDidSaveTextDocument.
 			ev['uri'] = {fsPath: ev.fsPath};
@@ -62,3 +62,8 @@ function activate(context) {
 }
 
 exports.activate = activate;
+
+function deactivate() {
+	fsw.dispose();
+}
+exports.deactivate = deactivate;
