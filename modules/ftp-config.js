@@ -12,6 +12,9 @@ module.exports = {
 	getConfigDir: function() {
 		return vscode.workspace.rootPath + "/.vscode";
 	},
+	getGeneratedDir: function() {
+		return upath.join(vscode.workspace.rootPath, this.generatedFiles.path);
+	},
 	defaultConfig: {
 		remotePath: "./",
 		host: "host",
@@ -25,7 +28,12 @@ module.exports = {
         debug: false,
         privateKeyPath: null,
         passphrase: null,
-		ignore: ["\\.vscode","\\.git","\\.DS_Store"]
+		ignore: ["\\.vscode","\\.git","\\.DS_Store"],
+		generatedFiles: {
+			uploadOnSave: false,
+			extensionsToInclude: [],
+			path: ''
+		}
 	},
 	getConfig: function() {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
@@ -55,6 +63,7 @@ module.exports = {
 	getSyncConfig: function() {
 		var config = this.getConfig();
 		return {
+			getGeneratedDir: this.getGeneratedDir,
 			local: config.localPath,
 			remote: upath.toUnix(config.remotePath),
 			host: config.host,
@@ -68,6 +77,7 @@ module.exports = {
             protocol: config.protocol || "ftp",
             privateKeyPath: config.privateKeyPath,
             passphrase: config.passphrase,
+			generatedFiles: config.generatedFiles,
             debug: config.debug ? function(msg) {
                 output(msg);
             } : null
