@@ -24,6 +24,11 @@ Initializes a default FTP-Sync configuration file in the `.vscode` directory. Op
 - privateKeyPath - Specifies the path to the private key for SFTP. The default is `null`.
 - passphrase - Specifies the passphrase to use with the private key for SFTP. The default is `null`.
 - ignore - An array of escaped regular expression strings specifying paths to ignore. If a path matches any of these regular expressions then it will not be included in the sync. Default values are `"\\.git"`, `"\\.vscode"` and `".DS_Store"`.
+- "generatedFiles": { 
+    * "uploadOnSave": true,
+     *   "path": "", [e.g.] "/build",
+     *   "extensionsToInclude": [] e.g. [".js", ".styl"]
+}
 
 ### Ftp-sync: Sync Local to Remote
 Displays a synchronization wizard to configure a sync operation that changes FTP files and folders to match project files.
@@ -64,6 +69,8 @@ Use at your own risk - I do not guarantee that it will work correctly!
 ------
 
 ## Version history
+- 0.3.3
+    - Added [ Support for generated files](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/118) 
 - 0.3.2
     - Added [FTP over SSL support](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/62)
     - Added [Sync current file to Remote](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/77)
