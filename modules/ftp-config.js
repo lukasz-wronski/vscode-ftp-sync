@@ -28,6 +28,7 @@ module.exports = {
         debug: false,
         privateKeyPath: null,
         passphrase: null,
+		agent: null,
 		ignore: ["\\.vscode","\\.git","\\.DS_Store"],
 		generatedFiles: {
 			uploadOnSave: false,
@@ -77,6 +78,7 @@ module.exports = {
             protocol: config.protocol || "ftp",
             privateKeyPath: config.privateKeyPath,
             passphrase: config.passphrase,
+			agent: config.agent,
 			generatedFiles: config.generatedFiles,
             debug: config.debug ? function(msg) {
                 output(msg);
