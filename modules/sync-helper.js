@@ -360,6 +360,27 @@ var uploadFile = function(localPath, rootPath, callback) {
 	})
 }
 
+var downloadFile = function(localPath, rootPath, callback) {
+    output("[sync-helper] downloadFile");
+       var remotePath = upath.toUnix(path.join(ftpConfig.remote, localPath.replace(rootPath, '')));
+       var remoteDir = upath.toUnix(path.dirname(remotePath));
+       connect(function(err) {
+        if(err) callback(err);
+        var getFile = function() {
+            ftp.get(remotePath, localPath, function(err) {
+                            callback(err);
+                       })
+        }
+        if(remoteDir != ".")
+            ensureDirExists(remoteDir, function(err) {
+                if(err) callback(err);
+                else getFile();
+            })
+         else
+            getFile();
+       })
+}
+
 var executeSync = function(sync, options, callback) {
     output("[sync-helper] executeSync");
 	sync.startTotal = totalOperations(sync);
@@ -386,6 +407,7 @@ var helper = {
 	executeSync: executeSync,
 	totalOperations: totalOperations,
 	uploadFile: uploadFile,
+	downloadFile: downloadFile,
 	disconnect: function() {
 		ftp.end();
 	},
