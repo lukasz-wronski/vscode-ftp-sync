@@ -22,7 +22,8 @@ module.exports = function() {
             username: ftpConfig.user,
             password: ftpConfig.password,
             privateKey: privateKey,
-            passphrase: ftpConfig.passphrase
+            passphrase: ftpConfig.passphrase,
+            agent: ftpConfig.agent
         });
     }
     
