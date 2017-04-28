@@ -65,11 +65,13 @@
       "explorer/context": [
         {
           "command": "extension.ftpsyncuploadselected",
-          "group": "extension"
+          "group": "extension",
+          "when": "!explorerResourceIsFolder"
         },
         {
           "command": "extension.ftpsyncdownloadselected",
-          "group": "extension"
+          "group": "extension",
+          "when": "!explorerResourceIsFolder"
         }
       ]
     }
