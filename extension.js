@@ -30,6 +30,7 @@ function activate(context) {
 	var commitCommand = vscode.commands.registerCommand('extension.ftpsynccommit', function() { require('./modules/commit-command')(getSyncHelper) });
 	var singleCommand = vscode.commands.registerTextEditorCommand('extension.ftpsyncsingle', function(editor) { require('./modules/sync-single-command')(editor, getSyncHelper) });
 	var uploadcurrentCommand = vscode.commands.registerCommand("extension.ftpsyncuploadselected", function(fileUrl) { require('./modules/uploadcurrent-command')(fileUrl, getSyncHelper) });
+	var downloadcurrentCommand = vscode.commands.registerCommand("extension.ftpsyncdownloadselected", function(fileUrl) { require('./modules/downloadcurrent-command')(fileUrl, getSyncHelper) });
 	var onSave = require('./modules/on-save');
 
 	var currentConfig = getSyncHelper().getConfig();
@@ -59,6 +60,7 @@ function activate(context) {
 	context.subscriptions.push(commitCommand);
 	context.subscriptions.push(singleCommand);
 	context.subscriptions.push(uploadcurrentCommand);
+	context.subscriptions.push(downloadcurrentCommand);
 }
 
 exports.activate = activate;
