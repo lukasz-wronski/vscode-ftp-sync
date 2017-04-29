@@ -3,7 +3,6 @@ var vscode = require("vscode");
 var path = require("path");
 var _ = require("lodash");
 var upath = require("upath");
-var output = require("./output");
 
 module.exports = {
 	getConfigPath: function() {
@@ -22,12 +21,12 @@ module.exports = {
 		password: "password",
 		port: 21,
 		secure: false,
-        protocol: "ftp",
+    protocol: "ftp",
 		uploadOnSave: false,
-        passive: false,
-        debug: false,
-        privateKeyPath: null,
-        passphrase: null,
+    passive: false,
+    debug: false,
+    privateKeyPath: null,
+    passphrase: null,
 		agent: null,
 		ignore: ["\\.vscode","\\.git","\\.DS_Store"],
 		generatedFiles: {
@@ -73,16 +72,14 @@ module.exports = {
 			password: config.password,
 			passphrase: config.passphrase,
 			ignore: config.ignore,
-            passive: config.passive,
-            secure: config.secure,
-            protocol: config.protocol || "ftp",
-            privateKeyPath: config.privateKeyPath,
-            passphrase: config.passphrase,
+			passive: config.passive,
+			secure: config.secure,
+			protocol: config.protocol || "ftp",
+			privateKeyPath: config.privateKeyPath,
+			passphrase: config.passphrase,
 			agent: config.agent,
 			generatedFiles: config.generatedFiles,
-            debug: config.debug ? function(msg) {
-                output(msg);
-            } : null
+			debug: config.debug
 		}
 	},
 	connectionChanged: function(oldConfig) {

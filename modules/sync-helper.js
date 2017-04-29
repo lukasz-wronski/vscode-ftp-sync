@@ -14,9 +14,16 @@ var ftp;
 // This are the uncompleted requests.
 var openListRemoteFilesRequsts = 0;
 
+// get timestamp
+var getCurrentTime = function() {
+	var currentdate = new Date();
+
+	return currentdate.getDate() + "/" + (currentdate.getMonth()+1)  + "/" + currentdate.getFullYear() + " @ " + currentdate.getHours() + ":"  + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+}
+
 //add options
 var listRemoteFiles = function(remotePath, callback, originalRemotePath, options) {
-    output("[sync-helper] listRemoteFiles");
+    output(getCurrentTime() + " > [ftp-sync] listRemoteFiles: " + remotePath);
 	remotePath = upath.toUnix(remotePath);
 	if(!originalRemotePath) {
 		originalRemotePath = remotePath;
@@ -104,7 +111,8 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath, options
 
 //add options
 var listLocalFiles = function(localPath, callback, options) {
-    output("[sync-helper] listLocalFiles");
+    output(getCurrentTime() + " > [ftp-sync] listLocalFiles:" + localPath);
+
 	var files = [];
 	fswalk.walk(localPath, function(basedir, filename, stat, next) {
 		var filePath = path.join(basedir, filename);
@@ -128,7 +136,6 @@ var listLocalFiles = function(localPath, callback, options) {
 }
 
 var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
-    output("[sync-helper] prepareSyncObject");
 	var from = options.upload ? localFiles : remoteFiles;
 	var to = options.upload ? remoteFiles : localFiles;
 	
@@ -199,7 +206,7 @@ var onPrepareRemoteProgress, onPrepareLocalProgress, onSyncProgress;
 var connected = false;
 
 var connect = function(callback) {
-    output("[sync-helper] connect");
+    //output(getCurrentTime() + " > [sync-helper] connect");
 	if(connected == false)
 	{
 		ftp.connect(ftpConfig);
@@ -214,7 +221,7 @@ var connect = function(callback) {
         });
 		ftp.onerror(callback);
         ftp.onclose(function(err) {
-            output("[sync-helper] connClosed");
+            output(getCurrentTime() + " > [ftp-sync] connection closed");
             connected = false;
         });
 	}
@@ -224,7 +231,6 @@ var connect = function(callback) {
 
 
 var prepareSync = function(options, callback) {
-    output("[sync-helper] prepareSync");
 	connect(function(err) {
 		if(err) callback(err);
 		else listRemoteFiles(options.remotePath, function(err, remoteFiles) {
@@ -239,13 +245,15 @@ var prepareSync = function(options, callback) {
 
 
 var executeSyncLocal = function(sync, options, callback) {
-	output("[sync-helper] executeSyncLocal");
-	if(onSyncProgress != null)
+	if(onSyncProgress != null) 
 		onSyncProgress(sync.startTotal - totalOperations(sync), sync.startTotal);
 	
 	var replaceFile = function(fileToReplace) {
 		var local = path.join(options.localPath, fileToReplace);
 		var remote = upath.toUnix(path.join(options.remotePath, fileToReplace));
+
+		output(getCurrentTime() + " > [ftp-sync] syncLocal replace: " + remote);
+
 		ftp.get(remote, local, function(err) {
 			if(err) callback(err);
             else executeSyncLocal(sync, options, callback);
@@ -255,6 +263,9 @@ var executeSyncLocal = function(sync, options, callback) {
 	if(sync.dirsToAdd.length > 0) {
 		var dirToAdd = sync.dirsToAdd.pop();	
 		var localPath = path.join(options.localPath, dirToAdd);
+
+		output(getCurrentTime() + " > [ftp-sync] syncLocal createDir: " + dirToAdd);
+
 		mkdirp(localPath, function(err) {
 			if(err) callback(err); else executeSyncLocal(sync, options, callback);
 		});
@@ -267,12 +278,18 @@ var executeSyncLocal = function(sync, options, callback) {
 	} else if(sync.filesToRemove.length > 0) {
 		var fileToRemove = sync.filesToRemove.pop();
 		var localPath = path.join(options.localPath, fileToRemove);
+
+		output(getCurrentTime() + " > [ftp-sync] syncLocal removeFile: " + fileToRemove);
+
 		fs.unlink(localPath, function(err) {
 			if(err) callback(err); else executeSyncLocal(sync, options, callback);
 		});
 	} else if(sync.dirsToRemove.length > 0) {
 		var dirToRemove = sync.dirsToRemove.pop();
 		var localPath = path.join(options.localPath, dirToRemove);
+
+		output(getCurrentTime() + " > [ftp-sync] syncLocal removeDir: " + dirToAdd);
+
 		fs.rmdir(localPath, function(err) {
 			if(err) callback(err); else executeSyncLocal(sync, options, callback);
 		});
@@ -282,13 +299,15 @@ var executeSyncLocal = function(sync, options, callback) {
 }
 
 var executeSyncRemote = function(sync, options, callback) {
-	output("[sync-helper] executeSyncRemote");
 	if(onSyncProgress != null)
 		onSyncProgress(sync.startTotal - totalOperations(sync), sync.startTotal);
 	
 	var replaceFile = function(fileToReplace) {
 		var local = path.join(options.localPath, fileToReplace);
 		var remote = upath.toUnix(path.join(options.remotePath, fileToReplace));
+
+		output(getCurrentTime() + " > [ftp-sync] syncRemote replace: " + local);
+
 		ftp.put(local, remote, function(err) {
 			if(err) callback(err); else executeSyncRemote(sync, options, callback);
 		});
@@ -297,6 +316,9 @@ var executeSyncRemote = function(sync, options, callback) {
 	if(sync.dirsToAdd.length > 0) {
 		var dirToAdd = sync.dirsToAdd.shift();	
 		var remotePath = upath.toUnix(path.join(options.remotePath, dirToAdd));
+
+		output(getCurrentTime() + " > [ftp-sync] syncRemote createDir: " + dirToAdd);
+
 		ftp.mkdir(remotePath, function(err) {
 			if(err) callback(err); else executeSyncRemote(sync, options, callback);
 		})
@@ -309,12 +331,18 @@ var executeSyncRemote = function(sync, options, callback) {
 	} else if(sync.filesToRemove.length > 0) {
 		var fileToRemove = sync.filesToRemove.pop();
 		var remotePath = upath.toUnix(path.join(options.remotePath, fileToRemove));
+
+		output(getCurrentTime() + " > [ftp-sync] syncRemote removeFile: " + fileToRemove);
+
 		ftp.delete(remotePath, function(err) {
 			if(err) callback(err); else executeSyncRemote(sync, options, callback);
 		});
 	} else if(sync.dirsToRemove.length > 0) {
 		var dirToRemove = sync.dirsToRemove.pop();
 		var remotePath = upath.toUnix(path.join(options.remotePath, dirToRemove));
+
+		output(getCurrentTime() + " > [ftp-sync] syncRemote removeDir: " + dirToRemove);
+
 		ftp.rmdir(remotePath, function(err) {
 			if(err) callback(err); else executeSyncRemote(sync, options, callback);
 		});
@@ -340,7 +368,7 @@ var ensureDirExists = function(remoteDir, callback) {
 }
 
 var uploadFile = function(localPath, rootPath, callback) {
-    output("[sync-helper] uploadFile");
+    output(getCurrentTime() + " > [sync-helper] uploading: " + path.parse(localPath).base);
 	var remotePath = upath.toUnix(path.join(ftpConfig.remote, localPath.replace(rootPath, '')));
 	var remoteDir = upath.toUnix(path.dirname(remotePath));
 	connect(function(err) {
@@ -361,7 +389,7 @@ var uploadFile = function(localPath, rootPath, callback) {
 }
 
 var downloadFile = function(localPath, rootPath, callback) {
-    output("[sync-helper] downloadFile");
+    output(getCurrentTime() + " > [sync-helper] downloading: " + path.parse(localPath).base);
        var remotePath = upath.toUnix(path.join(ftpConfig.remote, localPath.replace(rootPath, '')));
        var remoteDir = upath.toUnix(path.dirname(remotePath));
        connect(function(err) {
@@ -382,7 +410,7 @@ var downloadFile = function(localPath, rootPath, callback) {
 }
 
 var executeSync = function(sync, options, callback) {
-    output("[sync-helper] executeSync");
+    output(getCurrentTime() + " > [ftp-sync] sync starting");
 	sync.startTotal = totalOperations(sync);
 	connect(function(err) {
 		if(err) callback(err);
