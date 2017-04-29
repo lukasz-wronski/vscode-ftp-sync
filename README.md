@@ -48,6 +48,7 @@ Commits reviewed list of changes made with Sync Local to Remote or Sync Remote t
 - Better connection error handling
 - More real life testing
 - Bug fixes
+- Context menu to sync folders (up/down)
 
 ## Future plans
 
