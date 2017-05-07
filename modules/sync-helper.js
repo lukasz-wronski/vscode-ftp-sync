@@ -62,7 +62,7 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath, options
 		
 		remoteFiles.forEach(function(fileInfo) {
 			//when listing remoteFiles by onPrepareRemoteProgress, ignore remoteFiles
-			if (isIgnored(ftpConfig.ignore, path.join(options.remotePath, fileInfo.name))) return;
+			if (isIgnored(ftpConfig.ignore, path.join(remotePath, fileInfo.name))) return;
 
 			if(fileInfo.name == "." || fileInfo.name == "..") return;
 			var remoteItemPath = upath.toUnix(path.join(remotePath, fileInfo.name));
