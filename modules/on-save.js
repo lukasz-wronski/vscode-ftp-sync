@@ -6,10 +6,10 @@ var isIgnored = require("./is-ignored");
 var upath = require("upath");
 
 module.exports = function(document, getFtpSync, skipOnSaveCheck) {
-	
+
 	if(document.uri.fsPath.indexOf(vscode.workspace.rootPath) < 0)
 		return;
-		
+
 	var config = ftpconfig.getConfig();
 
 	//Should we bother to check for generated file uploads? (also check if the generated files path is set otherwise skip)
@@ -24,19 +24,19 @@ module.exports = function(document, getFtpSync, skipOnSaveCheck) {
 		else {
 			//Let's see if it's an extension we will be supporting!
 				if (!config.generatedFiles.extensionsToInclude.some(function(str) {
-				return document.uri.fsPath.endsWith(str); 
+				return document.uri.fsPath.endsWith(str);
 			}))
 				return;
 		}
-	}	
+	}
 	//We don't care about generated file uploads, let's see if it's a candidate for upload anyway.
 	else {
 		if(!config.uploadOnSave && !skipOnSaveCheck)
 			return;
 	}
 
-	if(isIgnored(config.ignore, document.uri.fsPath)) return;
-	
+	if(isIgnored(document.uri.fsPath, config.allow, config.ignore)) return;
+
 	var fileName = path.basename(document.uri.fsPath);
 	var uploadingStatus = vscode.window.setStatusBarMessage("Ftp-sync: Uploading " + fileName + " to FTP server...");
 
