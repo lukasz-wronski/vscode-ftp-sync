@@ -24,8 +24,9 @@ Initializes a default FTP-Sync configuration file in the `.vscode` directory. Op
 - privateKeyPath - Specifies the path to the private key for SFTP. The default is `null`.
 - passphrase - Specifies the passphrase to use with the private key for SFTP. The default is `null`.
 - agent - Specifies the ssh-agent to use for SFTP. The default is `null`.
+- allow - An array of escaped regular expression strings specifying paths which are allowed. If nonempty, unless a path matches any of these regular expressions it will not be included in the sync. Default value is empty, implying everything is allowed.
 - ignore - An array of escaped regular expression strings specifying paths to ignore. If a path matches any of these regular expressions then it will not be included in the sync. Default values are `"\\.git"`, `"\\.vscode"` and `".DS_Store"`.
-- "generatedFiles": { 
+- "generatedFiles": {
     * "uploadOnSave": true,
      *   "path": "", [e.g.] "/build",
      *   "extensionsToInclude": [] e.g. [".js", ".styl"]
@@ -72,7 +73,7 @@ Use at your own risk - I do not guarantee that it will work correctly!
 
 ## Version history
 - 0.3.3
-    - Added [ Support for generated files](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/118) 
+    - Added [ Support for generated files](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/118)
 - 0.3.2
     - Added [FTP over SSL support](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/62)
     - Added [Sync current file to Remote](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/77)
@@ -82,7 +83,7 @@ Use at your own risk - I do not guarantee that it will work correctly!
     - [Improve Error handling around parsing config file](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/102)
 - 0.3.1
     - Added [SFTP private key support](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/28)
-- 0.3.0 
+- 0.3.0
     - Added [SFTP protocol support](https://github.com/lukasz-wronski/vscode-ftp-sync/issues/26)
     - Improvement of sync performance in environments with many nested directories
     - Fix for problems with upload on save on unsynced directories
@@ -125,10 +126,10 @@ Use at your own risk - I do not guarantee that it will work correctly!
 	- Basic progress indication in sync process
 	- Better error handling in sync command
 	- Github links in package.json
-- 0.1.1 
+- 0.1.1
 	- All information messages moved to status bar
 	- Removed "alertOnSync" parameter from config
 	- Addedd progress indication in download process
 	- Fixes in download process
-- 0.1.0 
+- 0.1.0
 	- First version containing all basic features

@@ -50,25 +50,25 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath, options
 			if(err.code == 450)
 				callback(null, []);
 			else
-				callback(err); 
-			return; 
+				callback(err);
+			return;
 		}
-		
+
 		var result = [];
 		var subdirs = [];
-		
+
 		if(remoteFiles.length == 0)
 			callback(null, result);
-		
+
 		remoteFiles.forEach(function(fileInfo) {
 			//when listing remoteFiles by onPrepareRemoteProgress, ignore remoteFiles
-			if (isIgnored(ftpConfig.ignore, path.join(remotePath, fileInfo.name))) return;
+			if (isIgnored(path.join(remotePath, fileInfo.name), ftpConfig.allow, ftpConfig.ignore)) return;
 
 			if(fileInfo.name == "." || fileInfo.name == "..") return;
 			var remoteItemPath = upath.toUnix(path.join(remotePath, fileInfo.name));
 			if(fileInfo.type != 'd')
-				result.push({ 
-					name: remoteItemPath, 
+				result.push({
+					name: remoteItemPath,
 					size: fileInfo.size,
 					isDir: false
 				})
@@ -77,32 +77,32 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath, options
 				result.push({ name: remoteItemPath, isDir: true });
 			}
 		});
-		
+
 		var finish = function() {
-			result.forEach(function(item) { 
+			result.forEach(function(item) {
                 if(_.startsWith(item.name, originalRemotePath))
-				    item.name = item.name.replace(originalRemotePath, ""); 
+				    item.name = item.name.replace(originalRemotePath, "");
 				if(item.name[0] == "/") item.name = item.name.substr(1);
 				if(onPrepareRemoteProgress) onPrepareRemoteProgress(item.name);
 			});
 			result = _.sortBy(result, function(item) { return item.name });
 			callback(null, result);
 		}
-		
+
 		var listNextSubdir = function() {
 			var subdir = subdirs.shift();
 			var subPath = upath.toUnix(path.join(remotePath, subdir.name));
 			listRemoteFiles(subPath, function(err, subResult) {
 				if(err) { callback(err); return; }
-				result = _.union(result, subResult)	
+				result = _.union(result, subResult)
 				if(subdirs.length == 0)
 					finish();
 				else
 					listNextSubdir();
 			}, originalRemotePath, options);
 		}
-		
-		if(subdirs.length == 0) 
+
+		if(subdirs.length == 0)
 			finish();
 		else
 			listNextSubdir();
@@ -117,15 +117,15 @@ var listLocalFiles = function(localPath, callback, options) {
 	fswalk.walk(localPath, function(basedir, filename, stat, next) {
 		var filePath = path.join(basedir, filename);
 		//when listing localFiles by onPrepareLocalProgress, ignore localfile
-		if (isIgnored(ftpConfig.ignore, filePath)) return next();
+		if (isIgnored(filePath, ftpConfig.allow, ftpConfig.ignore)) return next();
 
 		filePath = filePath.replace(localPath, "");
 		filePath = upath.toUnix(filePath);
 		if(filePath[0] == "/") filePath = filePath.substr(1);
 
 		if(onPrepareLocalProgress) onPrepareLocalProgress(filePath);
-		files.push({ 
-			name: filePath, 
+		files.push({
+			name: filePath,
 			size: stat.size,
 			isDir: stat.isDirectory()
 		});
@@ -138,11 +138,11 @@ var listLocalFiles = function(localPath, callback, options) {
 var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 	var from = options.upload ? localFiles : remoteFiles;
 	var to = options.upload ? remoteFiles : localFiles;
-	
+
 	var skipIgnores = function(file) {
-        return isIgnored(ftpConfig.ignore, path.join(options.remotePath, file.name));
+		return isIgnored(path.join(options.remotePath, file.name), ftpConfig.allow, ftpConfig.ignore);
 	}
-	
+
 	_.remove(from, skipIgnores);
 	_.remove(to, skipIgnores);
 
@@ -151,7 +151,7 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 	var dirsToAdd = [];
 	var filesToRemove = [];
 	var dirsToRemove = [];
-	
+
 	if(options.mode == "force")
 		from.forEach(function(fromFile) {
 			var toEquivalent = to.find(function(toFile) { return toFile.name == fromFile.name });
@@ -171,7 +171,7 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 			if(!toEquivalent && fromFile.isDir) dirsToAdd.push(fromFile.name);
 			if(toEquivalent) toEquivalent.wasOnFrom = true;
 			if(toEquivalent && toEquivalent.size != fromFile.size && !fromFile.isDir)
-				filesToUpdate.push(fromFile.name);	
+				filesToUpdate.push(fromFile.name);
 		});
 
 	if(options.mode == "full")
@@ -188,7 +188,7 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
         _warning: "This file should not be saved, reopened review file won't work!",
 		filesToUpdate: filesToUpdate,
 		filesToAdd: filesToAdd,
-		dirsToAdd: dirsToAdd, 
+		dirsToAdd: dirsToAdd,
 		filesToRemove: filesToRemove,
 		dirsToRemove: dirsToRemove
 	});
@@ -197,9 +197,9 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 var totalOperations = function(sync) {
 	return sync.filesToUpdate.length
 		+ sync.filesToAdd.length
-		+ sync.dirsToAdd.length 
-		+ sync.filesToRemove.length 
-		+ sync.dirsToRemove.length 
+		+ sync.dirsToAdd.length
+		+ sync.filesToRemove.length
+		+ sync.dirsToRemove.length
 }
 
 var onPrepareRemoteProgress, onPrepareLocalProgress, onSyncProgress;
@@ -210,10 +210,10 @@ var connect = function(callback) {
 	if(connected == false)
 	{
 		ftp.connect(ftpConfig);
-		ftp.onready(function() { 
-            connected = true; 
+		ftp.onready(function() {
+            connected = true;
             if(!ftpConfig.passive && ftpConfig.protocol != "sftp")
-                callback(); 
+                callback();
             else if(ftpConfig.protocol == "sftp")
                 ftp.goSftp(callback);
             else if(ftpConfig.passive)
@@ -225,7 +225,7 @@ var connect = function(callback) {
             connected = false;
         });
 	}
-	else 
+	else
 		callback();
 }
 
@@ -245,9 +245,9 @@ var prepareSync = function(options, callback) {
 
 
 var executeSyncLocal = function(sync, options, callback) {
-	if(onSyncProgress != null) 
+	if(onSyncProgress != null)
 		onSyncProgress(sync.startTotal - totalOperations(sync), sync.startTotal);
-	
+
 	var replaceFile = function(fileToReplace) {
 		var local = path.join(options.localPath, fileToReplace);
 		var remote = upath.toUnix(path.join(options.remotePath, fileToReplace));
@@ -259,9 +259,9 @@ var executeSyncLocal = function(sync, options, callback) {
             else executeSyncLocal(sync, options, callback);
 		});
 	}
-	
+
 	if(sync.dirsToAdd.length > 0) {
-		var dirToAdd = sync.dirsToAdd.pop();	
+		var dirToAdd = sync.dirsToAdd.pop();
 		var localPath = path.join(options.localPath, dirToAdd);
 
 		output(getCurrentTime() + " > [ftp-sync] syncLocal createDir: " + dirToAdd);
@@ -301,7 +301,7 @@ var executeSyncLocal = function(sync, options, callback) {
 var executeSyncRemote = function(sync, options, callback) {
 	if(onSyncProgress != null)
 		onSyncProgress(sync.startTotal - totalOperations(sync), sync.startTotal);
-	
+
 	var replaceFile = function(fileToReplace) {
 		var local = path.join(options.localPath, fileToReplace);
 		var remote = upath.toUnix(path.join(options.remotePath, fileToReplace));
@@ -312,9 +312,9 @@ var executeSyncRemote = function(sync, options, callback) {
 			if(err) callback(err); else executeSyncRemote(sync, options, callback);
 		});
 	}
-	
+
 	if(sync.dirsToAdd.length > 0) {
-		var dirToAdd = sync.dirsToAdd.shift();	
+		var dirToAdd = sync.dirsToAdd.shift();
 		var remotePath = upath.toUnix(path.join(options.remotePath, dirToAdd));
 
 		output(getCurrentTime() + " > [ftp-sync] syncRemote createDir: " + dirToAdd);
@@ -414,7 +414,7 @@ var executeSync = function(sync, options, callback) {
 	sync.startTotal = totalOperations(sync);
 	connect(function(err) {
 		if(err) callback(err);
-		else if(options.upload) 
+		else if(options.upload)
 			executeSyncRemote(sync, options, callback);
 		else
 			executeSyncLocal(sync, options, callback);

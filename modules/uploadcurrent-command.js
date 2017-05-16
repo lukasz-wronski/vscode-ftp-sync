@@ -16,7 +16,7 @@ module.exports = function(fileUrl, getFtpSync) {
 	}
 
 	var config = ftpconfig.getConfig();
-	if(isIgnored(config.ignore, fileUrl.fsPath)) {
+	if(isIgnored(fileUrl.fsPath, config.allow, config.ignore)) {
 		vscode.window.showErrorMessage("Ftp-sync: Selected file is ignored.");
 		return;
 	}

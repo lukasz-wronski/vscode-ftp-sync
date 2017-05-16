@@ -21,14 +21,15 @@ module.exports = {
 		password: "password",
 		port: 21,
 		secure: false,
-    protocol: "ftp",
+	protocol: "ftp",
 		uploadOnSave: false,
-    passive: false,
-    debug: false,
-    privateKeyPath: null,
-    passphrase: null,
+	passive: false,
+	debug: false,
+	privateKeyPath: null,
+	passphrase: null,
 		agent: null,
-		ignore: ["\\.vscode","\\.git","\\.DS_Store"],
+		allow: [],
+		ignore: ["\\.vscode", "\\.git", "\\.DS_Store"],
 		generatedFiles: {
 			uploadOnSave: false,
 			extensionsToInclude: [],
@@ -57,7 +58,7 @@ module.exports = {
 			})
 			return false;
 		}
-		
+
 		return true;
 	},
 	getSyncConfig: function() {
@@ -71,6 +72,7 @@ module.exports = {
 			user: config.username,
 			password: config.password,
 			passphrase: config.passphrase,
+			allow: config.allow,
 			ignore: config.ignore,
 			passive: config.passive,
 			secure: config.secure,
@@ -84,9 +86,9 @@ module.exports = {
 	},
 	connectionChanged: function(oldConfig) {
 		var config = this.getSyncConfig();
-		return config.host != oldConfig.host 
-			|| config.port != oldConfig.port 
-			|| config.user != oldConfig.user 
+		return config.host != oldConfig.host
+			|| config.port != oldConfig.port
+			|| config.user != oldConfig.user
 			|| config.password != oldConfig.password;
 	}
 }
