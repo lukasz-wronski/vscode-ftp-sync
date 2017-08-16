@@ -1,5 +1,3 @@
-var passwordPrompt = require('./password-prompt');
-
 module.exports = function() {
     var self = this;
     
@@ -10,26 +8,23 @@ module.exports = function() {
     
     self.connect = function(ftpConfig) {
         
-        var ftpConfigCopy = Object.assign({}, ftpConfig);
-
         try {
-            ftpConfigCopy.privateKey = ftpConfig.privateKeyPath ? require('fs').readFileSync(ftpConfig.privateKeyPath) : undefined;
+            var privateKey = ftpConfig.privateKeyPath ? require('fs').readFileSync(ftpConfig.privateKeyPath) : undefined;
         }
         catch(err) {
             process.nextTick(function() { onErrorHandler(err); });
             return;
         }
-
-        if (!ftpConfigCopy.password && !ftpConfigCopy.privateKey) {
-            passwordPrompt().then(function(password) {
-                ftpConfigCopy.password = password;
-                client.connect(ftpConfigCopy);
-            });
-        }
-
-        else {
-            client.connect(ftpConfigCopy);
-        }
+        
+        client.connect({
+            host: ftpConfig.host,
+            port: ftpConfig.port,
+            username: ftpConfig.user,
+            password: ftpConfig.password,
+            privateKey: privateKey,
+            passphrase: ftpConfig.passphrase,
+            agent: ftpConfig.agent
+        });
     }
     
     self.onready = function(callback) {

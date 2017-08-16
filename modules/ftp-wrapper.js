@@ -1,5 +1,3 @@
-var passwordPrompt = require('./password-prompt');
-
 module.exports = function() {
     var self = this;
     
@@ -8,16 +6,7 @@ module.exports = function() {
     var fs = require('fs');
     
     self.connect = function(ftpConfig) {
-        if (!ftpConfig.password) {
-            passwordPrompt().then(function(password) {
-                ftp.connect(Object.assign({}, ftpConfig, {
-                    password: password
-                }));
-            });
-        }
-        else {
-            ftp.connect(ftpConfig);
-        }
+        ftp.connect(ftpConfig);
     }
     
     self.onready = function(callback) {

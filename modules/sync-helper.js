@@ -8,6 +8,7 @@ var isIgnored = require('./is-ignored');
 var output = require("./output");
 var FtpWrapper = require("./ftp-wrapper");
 var SftpWrapper = require("./sftp-wrapper");
+var vscode = require("vscode");
 
 var ftp;
 
@@ -93,7 +94,10 @@ var listRemoteFiles = function(remotePath, callback, originalRemotePath, options
 			var subdir = subdirs.shift();
 			var subPath = upath.toUnix(path.join(remotePath, subdir.name));
 			listRemoteFiles(subPath, function(err, subResult) {
-				if(err) { callback(err); return; }
+				if(err) {
+					callback(err); 
+					return;
+				}
 				result = _.union(result, subResult)
 				if(subdirs.length == 0)
 					finish();
@@ -209,7 +213,21 @@ var connect = function(callback) {
     //output(getCurrentTime() + " > [sync-helper] connect");
 	if(connected == false)
 	{
-		ftp.connect(ftpConfig);
+		// If password and private key path are required but missing from the 
+		// config file, prompt the user for a password and then connect
+		if((ftpConfig.protocol == "sftp" && !ftpConfig.password && !ftpConfig.privateKeyPath)
+				|| !ftpConfig.password) {
+			vscode.window.showInputBox({
+				prompt: '[ftp-sync] Password for "' + ftpConfig.host + '"',
+				password: true
+			}).then(function(password) {
+				ftp.connect(Object.assign({}, ftpConfig, { password: password }));
+			});
+		}
+		else { // Otherwise just connect
+			ftp.connect(ftpConfig);
+		}
+
 		ftp.onready(function() {
             connected = true;
             if(!ftpConfig.passive && ftpConfig.protocol != "sftp")
@@ -372,7 +390,10 @@ var uploadFile = function(localPath, rootPath, callback) {
 	var remotePath = upath.toUnix(path.join(ftpConfig.remote, localPath.replace(rootPath, '')));
 	var remoteDir = upath.toUnix(path.dirname(remotePath));
 	connect(function(err) {
-        if(err) callback(err);
+        if(err) {
+			callback(err);
+			return;
+		}  
         var putFile = function() {
             ftp.put(localPath, remotePath, function(err) {
 			     callback(err);
