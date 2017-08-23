@@ -76,6 +76,7 @@ module.exports = {
 			ignore: config.ignore,
 			passive: config.passive,
 			secure: config.secure,
+			secureOptions: config.secureOptions,
 			protocol: config.protocol || "ftp",
 			privateKeyPath: config.privateKeyPath,
 			passphrase: config.passphrase,
