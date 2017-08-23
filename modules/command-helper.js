@@ -1,5 +1,7 @@
 var vscode = require('vscode');
 
+var _store = new WeakMap();
+
 module.exports = {
 	executeSync: function(syncHelper, sync, options) {
 		var syncInfoMessage = null;
@@ -16,5 +18,10 @@ module.exports = {
 			else
 				vscode.window.setStatusBarMessage("Ftp-sync: sync-complete!", STATUS_TIMEOUT);
 		})
+	},
+	getStore: function(key) {
+		if (!_store.has(key))
+			_store.set(key, {});
+		return _store.get(key);
 	}
 }
