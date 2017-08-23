@@ -59,7 +59,7 @@
       {
         "command": "extension.ftpsyncdownloadselected",
         "title": "Ftp-sync: Download File"
-       }
+      }
     ],
     "menus": {
       "explorer/context": [

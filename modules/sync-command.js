@@ -29,7 +29,7 @@ module.exports = function(isUpload, getSyncHelper) {
 						editBuilder.insert(new vscode.Position(0, 0), syncJson);
 					});
 				});
-				vscode.window.activeTextEditor.document.syncOptions = options;
+				helper.getStore(vscode.window.activeTextEditor.document).syncOptions = options;
 			}, function(err) {
             vscode.window.showErrorMessage("Ftp-sync: sync error: " + err)
             })
