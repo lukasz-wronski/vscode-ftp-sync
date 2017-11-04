@@ -67,6 +67,10 @@ module.exports = function(fileUrl, getFtpSync) {
   function showFileActions(file) {
     const pickOptions = [
       {
+        label: '../',
+        description: '. UP a folder',
+        backPath: getFatherPath(file.path)
+      }, {
         label: 'DownLoad',
         description: 'DownLoad this file',
         file,
@@ -85,7 +89,9 @@ module.exports = function(fileUrl, getFtpSync) {
       if (!result) {
         return;
       }
-      if (result.action === 'download') {
+      if (result.backPath) {
+        listAllFiles(result.backPath);
+      } else if (result.action === 'download') {
         downloadFn(getLocalPath(result.file.path), getFtpSync);
       } else if (result.action === 'upload') {
         UploadFn(getLocalPath(result.file.path), getFtpSync);
