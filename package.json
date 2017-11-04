@@ -27,7 +27,6 @@
     "onCommand:extension.ftpsyncsingle",
     "onCommand:extension.ftpsyncuploadselected",
     "onCommand:extension.ftpsyncdownloadselected",
-    "onCommand:extension.ftpsynclistselected",
     "workspaceContains:.vscode/ftp-sync.json"
   ],
   "main": "./extension",
@@ -60,6 +59,10 @@
       {
         "command": "extension.ftpsyncdownloadselected",
         "title": "Ftp-sync: Download File"
+      },
+      {
+        "command": "extension.ftpsynclistselected",
+        "title": "Ftp-sync: Browse Remote..."
       }
     ],
     "menus": {
