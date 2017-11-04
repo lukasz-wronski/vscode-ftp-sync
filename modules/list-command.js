@@ -28,24 +28,21 @@ module.exports = function(fileUrl, getFtpSync) {
   }
 
   var fileName = path.basename(fileUrl.fsPath);
-  console.log('fileUrl:', fileUrl);
-  console.log('config:', config);
-  output('fileUrl' + JSON.stringify(fileUrl));
   let remotePath = getFatherPath(
     fileUrl.fsPath.replace(vscode.workspace.rootPath, config.remotePath)
   );
-  console.log('remotePath:', remotePath);
+  // console.log('remotePath:', remotePath);
   function listAllFiles(filesRemotePath) {
     getFtpSync().toListRemoteFiles(filesRemotePath, function(err, files) {
       if (err) {
-        console.error('err:', err);
+        // console.error('err:', err);
         vscode.window.showErrorMessage('Ftp-sync: Listing failed: ' + err);
       } else {
         vscode.window.setStatusBarMessage(
           'Ftp-sync: Listing successfully!',
           STATUS_TIMEOUT
         );
-        console.log('files:', files);
+        // console.log('files:', files);
         showFiles(files, filesRemotePath);
       }
     });
@@ -75,7 +72,7 @@ module.exports = function(fileUrl, getFtpSync) {
       if (!result) {
         return;
       }
-      console.log('sel file:', result);
+      // console.log('sel file:', result);
       if (result.backPath) {
         listAllFiles(result.backPath);
       } else if (result.isDir) {
@@ -103,7 +100,7 @@ module.exports = function(fileUrl, getFtpSync) {
     const pickResult = vscode.window.showQuickPick(pickOptions);
 
     pickResult.then(function(result) {
-      console.log('sel Actions:', result);
+      // console.log('sel Actions:', result);
       if (!result) {
         return;
       }
