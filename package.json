@@ -27,6 +27,7 @@
     "onCommand:extension.ftpsyncsingle",
     "onCommand:extension.ftpsyncuploadselected",
     "onCommand:extension.ftpsyncdownloadselected",
+    "onCommand:extension.ftpsynclistcurrent",
     "workspaceContains:.vscode/ftp-sync.json"
   ],
   "main": "./extension",
@@ -53,6 +54,10 @@
         "title": "Ftp-sync: Sync current file to Remote"
       },
       {
+        "command": "extension.ftpsynclistselected",
+        "title": "Ftp-sync: List Files"
+      },
+      {
         "command": "extension.ftpsyncuploadselected",
         "title": "Ftp-sync: Upload File"
       },
@@ -70,6 +75,11 @@
         },
         {
           "command": "extension.ftpsyncdownloadselected",
+          "group": "extension",
+          "when": "!explorerResourceIsFolder"
+        },
+        {
+          "command": "extension.ftpsynclistselected",
           "group": "extension",
           "when": "!explorerResourceIsFolder"
         }
