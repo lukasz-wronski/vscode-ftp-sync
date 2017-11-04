@@ -131,7 +131,7 @@ const listOneDeepRemoteFiles = function(remotePath, callback) {
       return;
     }
 
-    const result = [];
+    let result = [];
 
     if (remoteFiles.length == 0) {
       callback(null, result);
