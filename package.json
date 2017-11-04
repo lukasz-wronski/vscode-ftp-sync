@@ -10,14 +10,13 @@
     "url": "https://github.com/lukasz-wronski/vscode-ftp-sync/issues",
     "email": "vscode@lukaszwronski.pl"
   },
-  "homepage": "https://github.com/lukasz-wronski/vscode-ftp-sync/blob/master/README.md",
+  "homepage":
+    "https://github.com/lukasz-wronski/vscode-ftp-sync/blob/master/README.md",
   "repository": {
     "type": "git",
     "url": "https://github.com/lukasz-wronski/vscode-ftp-sync.git"
   },
-  "categories": [
-    "Other"
-  ],
+  "categories": ["Other"],
   "icon": "icon.png",
   "activationEvents": [
     "onCommand:extension.ftpsyncinit",
@@ -27,6 +26,7 @@
     "onCommand:extension.ftpsyncsingle",
     "onCommand:extension.ftpsyncuploadselected",
     "onCommand:extension.ftpsyncdownloadselected",
+    "onCommand:extension.ftpsynclistcurrent",
     "workspaceContains:.vscode/ftp-sync.json"
   ],
   "main": "./extension",
@@ -70,6 +70,11 @@
         },
         {
           "command": "extension.ftpsyncdownloadselected",
+          "group": "extension",
+          "when": "!explorerResourceIsFolder"
+        },
+        {
+          "command": "extension.ftpsynclistselected",
           "group": "extension",
           "when": "!explorerResourceIsFolder"
         }
