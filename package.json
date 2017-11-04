@@ -10,14 +10,13 @@
     "url": "https://github.com/lukasz-wronski/vscode-ftp-sync/issues",
     "email": "vscode@lukaszwronski.pl"
   },
-  "homepage": "https://github.com/lukasz-wronski/vscode-ftp-sync/blob/master/README.md",
+  "homepage":
+    "https://github.com/lukasz-wronski/vscode-ftp-sync/blob/master/README.md",
   "repository": {
     "type": "git",
     "url": "https://github.com/lukasz-wronski/vscode-ftp-sync.git"
   },
-  "categories": [
-    "Other"
-  ],
+  "categories": ["Other"],
   "icon": "icon.png",
   "activationEvents": [
     "onCommand:extension.ftpsyncinit",
@@ -52,10 +51,6 @@
       {
         "command": "extension.ftpsyncsingle",
         "title": "Ftp-sync: Sync current file to Remote"
-      },
-      {
-        "command": "extension.ftpsynclistselected",
-        "title": "Ftp-sync: List Files"
       },
       {
         "command": "extension.ftpsyncuploadselected",
