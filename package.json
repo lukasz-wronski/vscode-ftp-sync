@@ -27,6 +27,7 @@
     "onCommand:extension.ftpsyncsingle",
     "onCommand:extension.ftpsyncuploadselected",
     "onCommand:extension.ftpsyncdownloadselected",
+    "onCommand:extension.ftpsynclistselected",
     "workspaceContains:.vscode/ftp-sync.json"
   ],
   "main": "./extension",
@@ -70,6 +71,11 @@
         },
         {
           "command": "extension.ftpsyncdownloadselected",
+          "group": "extension",
+          "when": "!explorerResourceIsFolder"
+        },
+        {
+          "command": "extension.ftpsynclistselected",
           "group": "extension",
           "when": "!explorerResourceIsFolder"
         }
