@@ -37,6 +37,13 @@ module.exports = function(fileUrl, getFtpSync) {
       }
     });
   }
+  DeleteFn(filePath) {
+    getFtpSync().deleteRemoteFile(filePath).then(result=>{
+      vscode.window.setStatusBarMessage('Ftp-sync: Delete successfully!', STATUS_TIMEOUT);
+    }).catch(err=>{
+      vscode.window.showErrorMessage('Ftp-sync: Delete failed: ' + err);
+    })
+  }
   listAllFiles(remotePath);
   // show remotePath files
   function showFiles(files, filesRemotePath) {
@@ -80,6 +87,11 @@ module.exports = function(fileUrl, getFtpSync) {
         description: 'Upload this file',
         file,
         action: 'upload'
+      }, {
+        label: 'Delete',
+        description: 'Delete this file',
+        file,
+        action: 'delete'
       }
     ];
     const pickResult = vscode.window.showQuickPick(pickOptions);
@@ -95,6 +107,8 @@ module.exports = function(fileUrl, getFtpSync) {
         downloadFn(getLocalPath(result.file.path), getFtpSync);
       } else if (result.action === 'upload') {
         UploadFn(getLocalPath(result.file.path), getFtpSync);
+      } else if (result.action === 'delete') {
+        DeleteFn(result.file.path);
       }
     });
   }

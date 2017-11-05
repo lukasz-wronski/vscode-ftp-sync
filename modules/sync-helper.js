@@ -177,6 +177,24 @@ const ListRemoteFilesByPath = function name(remotePath, callback) {
     listOneDeepRemoteFiles(remotePath, callback);
   });
 };
+const deleteRemoteFile = function name(remoteFilePath, callback) {
+  return new Promise((resolve, reject) => {
+    connect(function(err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      output(getCurrentTime() + " > [ftp-sync] deletRemoteFile: " + fileToRemove);
+      ftp.delete(remoteFilePath, function(err) {
+        if (err)
+          reject(err);
+        else
+          resolve({success: true, path: remoteFilePath});
+        }
+      );
+    });
+  })
+};
 //add options
 var listLocalFiles = function(localPath, callback, options) {
     output(getCurrentTime() + " > [ftp-sync] listLocalFiles:" + localPath);
@@ -579,6 +597,7 @@ var listLocalFiles = function(localPath, callback, options) {
         },
         prepareSync: prepareSync,
         ListRemoteFilesByPath: ListRemoteFilesByPath,
+        deleteRemoteFile: deleteRemoteFile,
         executeSync: executeSync,
         totalOperations: totalOperations,
         uploadFile: uploadFile,
