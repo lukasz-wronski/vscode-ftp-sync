@@ -168,7 +168,7 @@ const listOneDeepRemoteFiles = function(remotePath, callback) {
   });
 };
 // the entry of list request
-const ListRemoteFilesByPath = function name(remotePath, callback) {
+const ListRemoteFilesByPath = function(remotePath, callback) {
   connect(function(err) {
     if (err) {
       callback(err);
@@ -177,14 +177,14 @@ const ListRemoteFilesByPath = function name(remotePath, callback) {
     listOneDeepRemoteFiles(remotePath, callback);
   });
 };
-const deleteRemoteFile = function name(remoteFilePath, callback) {
+const deleteRemoteFile = function(remoteFilePath) {
   return new Promise((resolve, reject) => {
     connect(function(err) {
       if (err) {
         reject(err);
         return;
       }
-      output(getCurrentTime() + " > [ftp-sync] deletRemoteFile: " + fileToRemove);
+      output(getCurrentTime() + " > [ftp-sync] deletRemoteFile: " + remoteFilePath);
       ftp.delete(remoteFilePath, function(err) {
         if (err)
           reject(err);
