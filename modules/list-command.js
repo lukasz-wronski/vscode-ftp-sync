@@ -5,7 +5,7 @@ const path = require('path');
 const isIgnored = require('./is-ignored');
 const output = require('./output');
 const downloadFn = require('./downloadcurrent-command');
-const UploadFn = require('./uploadcurrent-command');
+const uploadFn = require('./uploadcurrent-command');
 
 module.exports = function(fileUrl, getFtpSync) {
   if (!vscode.workspace.rootPath) {
@@ -37,10 +37,10 @@ module.exports = function(fileUrl, getFtpSync) {
       }
     });
   }
-  DeleteFn(filePath) {
-    getFtpSync().deleteRemoteFile(filePath).then(result=>{
+  function deleteFn(filePath) {
+    getFtpSync().deleteRemoteFile(filePath).then(result => {
       vscode.window.setStatusBarMessage('Ftp-sync: Delete successfully!', STATUS_TIMEOUT);
-    }).catch(err=>{
+    }).catch(err => {
       vscode.window.showErrorMessage('Ftp-sync: Delete failed: ' + err);
     })
   }
@@ -106,9 +106,9 @@ module.exports = function(fileUrl, getFtpSync) {
       } else if (result.action === 'download') {
         downloadFn(getLocalPath(result.file.path), getFtpSync);
       } else if (result.action === 'upload') {
-        UploadFn(getLocalPath(result.file.path), getFtpSync);
+        uploadFn(getLocalPath(result.file.path), getFtpSync);
       } else if (result.action === 'delete') {
-        DeleteFn(result.file.path);
+        deleteFn(result.file.path);
       }
     });
   }
