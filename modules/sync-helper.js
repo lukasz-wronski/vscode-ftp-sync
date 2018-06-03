@@ -8,6 +8,7 @@ var isIgnored = require('./is-ignored');
 var output = require("./output");
 var FtpWrapper = require("./ftp-wrapper");
 var SftpWrapper = require("./sftp-wrapper");
+var ScpWrapper =  require("./scp-wrapper");
 var vscode = require("vscode");
 
 var ftp;
@@ -210,12 +211,12 @@ var onPrepareRemoteProgress, onPrepareLocalProgress, onSyncProgress;
 var connected = false;
 
 var connect = function(callback) {
-    //output(getCurrentTime() + " > [sync-helper] connect");
+	output(getCurrentTime() + " > [sync-helper] connect");
 	if(connected == false)
 	{
 		// If password and private key path are required but missing from the 
 		// config file, prompt the user for a password and then connect
-		if((ftpConfig.protocol == "sftp" && !ftpConfig.password && !ftpConfig.privateKeyPath)
+		if(((ftpConfig.protocol == "sftp" || ftpConfig.protocol == "scp") && !ftpConfig.password && !ftpConfig.privateKeyPath)
 				|| !ftpConfig.password) {
 			vscode.window.showInputBox({
 				prompt: '[ftp-sync] Password for "' + ftpConfig.host + '"',
@@ -371,17 +372,18 @@ var executeSyncRemote = function(sync, options, callback) {
 
 var ensureDirExists = function(remoteDir, callback) {
     ftp.list(path.posix.join(remoteDir, ".."), function(err, list) {
-        if(err)
+		if(err) {
             ensureDirExists(path.posix.join(remoteDir, ".."), function() {
                 ensureDirExists(remoteDir, callback);
             });
-        else if(_.any(list, f => f.name == path.basename(remoteDir)))
+		} else if(_.some(list, f => f.name == path.basename(remoteDir))) {
             callback();
-        else
+		} else {
             ftp.mkdir(remoteDir, function(err) {
                 if(err) callback(err)
                 else callback();
-            })
+			});
+		}
     });
 }
 
@@ -446,7 +448,7 @@ var ftpConfig;
 var helper = {
 	useConfig: function(config) {
         if(!ftpConfig || ftpConfig.protocol != config.protocol)
-            ftp = config.protocol == "sftp" ? new SftpWrapper() : new FtpWrapper();
+            ftp = config.protocol == "sftp" ? new SftpWrapper() : config.protocol == "scp" ? new ScpWrapper() : new FtpWrapper();
 		ftpConfig = config;
 	},
 	getConfig: function() {
