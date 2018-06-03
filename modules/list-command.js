@@ -8,23 +8,35 @@ const downloadFn = require('./downloadcurrent-command');
 const uploadFn = require('./uploadcurrent-command');
 
 module.exports = function(fileUrl, getFtpSync) {
+	var filePath = fileUrl ? fileUrl.fsPath : undefined;
+
+	//We aren't getting a file, trying to take the current one
+	if(!filePath) {
+		filePath = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document.fileName : undefined;
+	}
+
+	if(!filePath) {
+		vscode.window.showErrorMessage("Ftp-sync: No file selected");
+		return;
+	}
+
   if (!vscode.workspace.rootPath) {
     vscode.window.showErrorMessage('Ftp-sync: Cannot init ftp-sync without opened folder');
     return;
   }
 
-  if (fileUrl.fsPath.indexOf(vscode.workspace.rootPath) < 0) {
+  if (filePath.indexOf(vscode.workspace.rootPath) < 0) {
     vscode.window.showErrorMessage('Ftp-sync: Selected file is not a part of the workspace.');
     return;
   }
 
   var config = ftpconfig.getConfig();
-  if (isIgnored(fileUrl.fsPath, config.allow, config.ignore)) {
+  if (isIgnored(filePath, config.allow, config.ignore)) {
     vscode.window.showErrorMessage('Ftp-sync: Selected file is ignored.');
     return;
   }
 
-  let remotePath = getFatherPath(fileUrl.fsPath.replace(vscode.workspace.rootPath, config.remotePath));
+  let remotePath = getFatherPath(filePath.replace(vscode.workspace.rootPath, config.remotePath));
   function listAllFiles(filesRemotePath) {
     getFtpSync().ListRemoteFilesByPath(filesRemotePath, function(err, files) {
       if (err) {
