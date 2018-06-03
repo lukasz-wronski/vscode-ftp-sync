@@ -59,6 +59,10 @@
       {
         "command": "extension.ftpsyncdownloadselected",
         "title": "Ftp-sync: Download File"
+      },
+      {
+        "command": "extension.ftpsynclistselected",
+        "title": "Ftp-sync: Browse Remote..."
       }
     ],
     "menus": {
@@ -70,6 +74,11 @@
         },
         {
           "command": "extension.ftpsyncdownloadselected",
+          "group": "extension",
+          "when": "!explorerResourceIsFolder"
+        },
+        {
+          "command": "extension.ftpsynclistselected",
           "group": "extension",
           "when": "!explorerResourceIsFolder"
         }
