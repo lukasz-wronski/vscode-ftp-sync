@@ -59,6 +59,10 @@
       {
         "command": "extension.ftpsyncdownloadselected",
         "title": "Ftp-sync: Download File"
+      },
+      {
+        "command": "extension.ftpsynclistselected",
+        "title": "Ftp-sync: Browse Remote..."
       }
     ],
     "menus": {
@@ -72,6 +76,11 @@
           "command": "extension.ftpsyncdownloadselected",
           "group": "extension",
           "when": "!explorerResourceIsFolder"
+        },
+        {
+          "command": "extension.ftpsynclistselected",
+          "group": "extension",
+          "when": "!explorerResourceIsFolder"
         }
       ]
     }
@@ -83,9 +92,10 @@
     "fs-cp": "^1.3.1",
     "fs-walk": "0.0.1",
     "ftp": "^0.3.10",
-    "lodash": "3.10.1",
+    "lodash": "~4.11.1",
     "mkdirp": "^0.5.1",
-    "ssh2": "^0.4.13",
+    "scp2": "^0.5.0",
+    "ssh2": "^0.6",
     "stat-mode": "^0.2.1",
     "upath": "0.1.6"
   }
