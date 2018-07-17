@@ -611,6 +611,36 @@ var helper = {
 	},
 	onSyncProgress: function (callback) {
 		onSyncProgress = callback;
+	},
+	generateRunSyncLabel: function(sync){
+
+		if(!ftpConfig.detailedSyncSummary){
+			return "Run all " + totalOperations(sync) + " operations now";
+		}
+
+		var operationLabels = [];
+
+		if(sync.filesToUpdate.length > 0){
+			operationLabels.push('Updated files: ' + sync.filesToUpdate.length);
+		}
+
+		if(sync.filesToAdd.length > 0 ){
+			operationLabels.push('New files: ' + sync.filesToAdd.length);
+		}
+
+		if(sync.dirsToAdd.length > 0 ){
+			operationLabels.push('New folders: ' + sync.filesToAdd.length);
+		}
+
+		if(sync.filesToRemove.length > 0){
+			operationLabels.push('Deleted files: '+ sync.filesToRemove.length);
+		}
+
+		if(sync.dirsToRemove.length > 0){
+			operationLabels.push('Deleted folders: '+ sync.dirsToRemove.length);
+		}
+
+		return operationLabels.join(', ');
 	}
 }
 

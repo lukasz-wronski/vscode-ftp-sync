@@ -57,7 +57,7 @@ module.exports = function(isUpload, getSyncHelper) {
 			else {
 				var pickOptions = [{
 						label: "Run",
-						description: "Run all " + getSyncHelper().totalOperations(sync) + " operations now",
+						description: getSyncHelper().generateRunSyncLabel(sync),
 						operation: "run"
 					}, {
 						label: "Review",
