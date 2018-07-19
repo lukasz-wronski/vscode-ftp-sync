@@ -101,9 +101,16 @@ module.exports = function(isUpload, getSyncHelper) {
 		
 		pickResult.then(function(result) {
 			if(!result) return;
+			var customLocalPath = ftpconfig.getConfig().localPath;
+			var localPath = null;
+			if (customLocalPath == 'undefined' && customLocalPath != '') {
+				localPath = vscode.workspace.rootPath;
+			} else {
+				localPath = customLocalPath;
+			}
 			var syncOptions = {
 				remotePath: path.join(getSyncHelper().getConfig().remote, dirPath),
-				localPath: path.join(vscode.workspace.rootPath, dirPath),
+				localPath: path.join(localPath, dirPath),
 				upload: isUpload,
 				mode: result.mode
 			};
