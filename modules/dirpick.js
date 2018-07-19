@@ -16,16 +16,8 @@ var dirpick = function (callback, currentDir) {
 		label: path.join(selectListPrefix, path.basename(currentDir)),
 		description: "Choose this folder"
 	}];
-	
-	var customLocalPath = ftpconfig.getConfig().localPath;
-	var rootPath = null;
-	if (customLocalPath == 'undefined' && customLocalPath != '') {
-		rootPath = vscode.workspace.rootPath;
-	} else {
-		rootPath = customLocalPath;
-	}
 
-	getDirectories(path.join(rootPath, currentDir)).forEach(function (dir) {
+	getDirectories(path.join(ftpconfig.getLocalPath(), currentDir)).forEach(function (dir) {
 		options.push(path.join(selectListPrefix, path.basename(currentDir), dir));
 	})
 
