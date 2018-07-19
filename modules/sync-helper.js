@@ -522,6 +522,8 @@ var ensureDirExists = function (remoteDir, callback) {
 
 var uploadFile = function (localPath, rootPath, callback) {
 	output(getCurrentTime() + " > [sync-helper] uploading: " + path.parse(localPath).base);
+	console.log(localPath);
+	console.log(rootPath);
 	var remotePath = upath.toUnix(path.join(ftpConfig.remote, localPath.replace(rootPath, '')));
 	var remoteDir = upath.toUnix(path.dirname(remotePath));
 	connect(function (err) {
