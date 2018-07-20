@@ -16,6 +16,7 @@ module.exports = {
 	},
 	defaultConfig: {
 		remotePath: "./",
+		localPath: "",
 		host: "host",
 		username: "username",
 		password: "password",
