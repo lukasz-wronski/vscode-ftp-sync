@@ -5,28 +5,29 @@ var _ = require("lodash");
 var upath = require("upath");
 
 module.exports = {
-	getConfigPath: function() {
+	getConfigPath: function () {
 		return this.getConfigDir() + "/ftp-sync.json";
 	},
-	getConfigDir: function() {
+	getConfigDir: function () {
 		return vscode.workspace.rootPath + "/.vscode";
 	},
-	getGeneratedDir: function() {
+	getGeneratedDir: function () {
 		return upath.join(vscode.workspace.rootPath, this.generatedFiles.path);
 	},
 	defaultConfig: {
 		remotePath: "./",
+		localPath: "",
 		host: "host",
 		username: "username",
 		password: "password",
 		port: 21,
 		secure: false,
-	protocol: "ftp",
+		protocol: "ftp",
 		uploadOnSave: false,
-	passive: false,
-	debug: false,
-	privateKeyPath: null,
-	passphrase: null,
+		passive: false,
+		debug: false,
+		privateKeyPath: null,
+		passphrase: null,
 		agent: null,
 		allow: [],
 		ignore: ["\\.vscode", "\\.git", "\\.DS_Store"],
@@ -36,24 +37,25 @@ module.exports = {
 			path: ''
 		}
 	},
-	getConfig: function() {
+	getConfig: function () {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
 		var configObject;
 
 		try {
 			configObject = JSON.parse(configjson);
-		}
-		catch (err){
+		} catch (err) {
 			vscode.window.showErrorMessage("Ftp-sync: Config file is not a valid JSON document. - " + err.message);
 		}
 		return _.defaults(configObject, this.defaultConfig);
 	},
-	validateConfig: function() {
-		if(!fs.existsSync(this.getConfigPath())) {
+	validateConfig: function () {
+		if (!fs.existsSync(this.getConfigPath())) {
 			var options = ["Create ftp-sync config now...", "Nah, forget about it..."];
-			var pick = vscode.window.showQuickPick(options, { placeHolder: "No configuration file found. Run Init command first." });
-			pick.then(function(answer) {
-				if(answer == options[0])
+			var pick = vscode.window.showQuickPick(options, {
+				placeHolder: "No configuration file found. Run Init command first."
+			});
+			pick.then(function (answer) {
+				if (answer == options[0])
 					require("./init-command")();
 			})
 			return false;
@@ -61,7 +63,7 @@ module.exports = {
 
 		return true;
 	},
-	getSyncConfig: function() {
+	getSyncConfig: function () {
 		var config = this.getConfig();
 		return {
 			getGeneratedDir: this.getGeneratedDir,
@@ -85,11 +87,27 @@ module.exports = {
 			debug: config.debug
 		}
 	},
-	connectionChanged: function(oldConfig) {
+	connectionChanged: function (oldConfig) {
 		var config = this.getSyncConfig();
-		return config.host != oldConfig.host
-			|| config.port != oldConfig.port
-			|| config.user != oldConfig.user
-			|| config.password != oldConfig.password;
+		return config.host != oldConfig.host ||
+			config.port != oldConfig.port ||
+			config.user != oldConfig.user ||
+			config.password != oldConfig.password;
+	},
+	getLocalPath: function () {
+		var customLocalPath = this.getConfig().localPath;
+		if (customLocalPath != undefined && customLocalPath != '') {
+			if (process.platform === "win32") {
+				customLocalPath = customLocalPath.replace(/\//g, '\\');
+			}
+			return this.decapitalizeFirstLetterIfWindows(customLocalPath);
+		} else {
+			return vscode.workspace.rootPath;
+		}
+	},
+	decapitalizeFirstLetterIfWindows: function (dir) {
+		if (/[A-Z]:/.test(dir))
+			return dir.charAt(0).toLowerCase() + dir.slice(1)
+		return dir;
 	}
 }

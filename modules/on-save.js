@@ -5,9 +5,9 @@ var path = require("path");
 var isIgnored = require("./is-ignored");
 var upath = require("upath");
 
-module.exports = function(document, getFtpSync, skipOnSaveCheck) {
+module.exports = function (document, getFtpSync, skipOnSaveCheck) {
 
-	if(document.uri.fsPath.indexOf(vscode.workspace.rootPath) < 0)
+	if (document.uri.fsPath.indexOf(ftpconfig.getLocalPath()) < 0)
 		return;
 
 	var config = ftpconfig.getConfig();
@@ -15,34 +15,34 @@ module.exports = function(document, getFtpSync, skipOnSaveCheck) {
 	//Should we bother to check for generated file uploads? (also check if the generated files path is set otherwise skip)
 	if (config.generatedFiles.uploadOnSave && (config.generatedFiles.path != "")) {
 		//If it's not an auto uploaded generated file it won't start with that directory
-		if (!upath.normalize(path.dirname(document.uri.fsPath)).startsWith( getFtpSync().getConfig().getGeneratedDir()) ) {
+		if (!upath.normalize(path.dirname(document.uri.fsPath)).startsWith(getFtpSync().getConfig().getGeneratedDir())) {
 			//Don't upload it!
-			if(!config.uploadOnSave && !skipOnSaveCheck)
+			if (!config.uploadOnSave && !skipOnSaveCheck)
 				return;
 		}
 		//It's an auto upload generated file
 		else {
 			//Let's see if it's an extension we will be supporting!
-				if (!config.generatedFiles.extensionsToInclude.some(function(str) {
-				return document.uri.fsPath.endsWith(str);
-			}))
+			if (!config.generatedFiles.extensionsToInclude.some(function (str) {
+					return document.uri.fsPath.endsWith(str);
+				}))
 				return;
 		}
 	}
 	//We don't care about generated file uploads, let's see if it's a candidate for upload anyway.
 	else {
-		if(!config.uploadOnSave && !skipOnSaveCheck)
+		if (!config.uploadOnSave && !skipOnSaveCheck)
 			return;
 	}
 
-	if(isIgnored(document.uri.fsPath, config.allow, config.ignore)) return;
+	if (isIgnored(document.uri.fsPath, config.allow, config.ignore)) return;
 
 	var fileName = path.basename(document.uri.fsPath);
 	var uploadingStatus = vscode.window.setStatusBarMessage("Ftp-sync: Uploading " + fileName + " to FTP server...");
 
-	getFtpSync().uploadFile(document.uri.fsPath, vscode.workspace.rootPath, function(err) {
+	getFtpSync().uploadFile(document.uri.fsPath, ftpconfig.getLocalPath(), function (err) {
 		uploadingStatus.dispose();
-		if(err)
+		if (err)
 			vscode.window.showErrorMessage("Ftp-sync: Uploading " + fileName + " failed: " + err);
 		else
 			vscode.window.setStatusBarMessage("Ftp-sync: " + fileName + " uploaded successfully!", STATUS_TIMEOUT);
