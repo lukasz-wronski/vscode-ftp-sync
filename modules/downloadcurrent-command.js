@@ -23,8 +23,10 @@ module.exports = function (fileUrl, getFtpSync) {
 		return;
 	}
 
-	if (filePath.indexOf(vscode.workspace.rootPath) < 0) {
-		vscode.window.showErrorMessage("Ftp-sync: Selected file is not a part of the workspace.");
+	console.log(filePath);
+
+	if (filePath.indexOf(ftpconfig.getLocalPath()) < 0) {
+		vscode.window.showErrorMessage("Ftp-sync: Selected file is not a part of the selected local path.");
 		return;
 	}
 
@@ -36,7 +38,7 @@ module.exports = function (fileUrl, getFtpSync) {
 
 	var fileName = path.basename(filePath);
 	var downloadStatus = vscode.window.setStatusBarMessage("Ftp-sync: Downloading " + fileName + " from FTP server...", STATUS_TIMEOUT);
-	getFtpSync().downloadFile(filePath, vscode.workspace.rootPath, function (err) {
+	getFtpSync().downloadFile(filePath, ftpconfig.getLocalPath(), function (err) {
 		downloadStatus.dispose();
 		if (err)
 			vscode.window.showErrorMessage("Ftp-sync: Downloading " + fileName + " failed: " + err);
