@@ -63,7 +63,7 @@ module.exports = function (fileUrl, getFtpSync) {
 	function showFiles(files, filesRemotePath) {
 		const pickOptions = files.map(file => ({
 			label: getLabel(file),
-			description: file.path,
+			description: file.name,
 			file,
 			isDir: file.isDir
 		}));
@@ -76,6 +76,7 @@ module.exports = function (fileUrl, getFtpSync) {
 		});
 		//TODO problems here with the result path/filename
 		pickResult.then(function (result) {
+			console.log(result);
 			if (!result) {
 				return;
 			}
@@ -122,11 +123,11 @@ module.exports = function (fileUrl, getFtpSync) {
 			if (result.backPath) {
 				listAllFiles(result.backPath);
 			} else if (result.action === 'download') {
-				downloadFn(getLocalPath(result.file.path), getFtpSync);
+				downloadFn(getLocalPath(result.file.name), getFtpSync);
 			} else if (result.action === 'upload') {
-				uploadFn(getLocalPath(result.file.path), getFtpSync);
+				uploadFn(getLocalPath(result.file.name), getFtpSync);
 			} else if (result.action === 'delete') {
-				deleteFn(result.file.path);
+				deleteFn(result.file.name);
 			}
 		});
 	}

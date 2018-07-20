@@ -23,8 +23,6 @@ module.exports = function (fileUrl, getFtpSync) {
 		return;
 	}
 
-	console.log(filePath);
-
 	if (filePath.indexOf(ftpconfig.getLocalPath()) < 0) {
 		vscode.window.showErrorMessage("Ftp-sync: Selected file is not a part of the selected local path.");
 		return;
