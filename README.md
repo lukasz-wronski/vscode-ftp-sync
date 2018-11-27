@@ -2,7 +2,7 @@
 
 This extension allows you to easily synchronise your local workspace (project files) with an FTP server. It also has several advanced features such as  __automatic upload on save__.
 
-![Demo of extension](http://i.imgur.com/W9h4pwW.gif)
+![Demo of extension](https://i.imgur.com/W9h4pwW.gif)
 
 ## Usage
 There are four commands available. You can access them from the command palette (Ctrl+Shift+P on Windows/Linux).
@@ -72,6 +72,17 @@ Use at your own risk - I do not guarantee that it will work correctly!
 ------
 
 ## Version history
+- 0.3.5
+    - Added [ Various enhancements (SCP Support, bug fixes, list command)](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/237)
+    - Added [ List commands](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/215)
+    - Added [ Fix for broken ignore and allow regex](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/210)
+     - [ Introduced separate store to store syncOption](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/200)
+    - Added [ Prompt for password if no password was given in config](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/199)
+    - Added [ Fix for config secureOptions being ignored](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/195)
+    - [ Implemented allow config](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/170)
+    - Added [ Fix for incorrect path for ignore of remote sync](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/163)
+    - Added [ Ability to download a single file using the context menu](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/152)
+    - Added [ Rudimentary ssh-agent support](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/134)
 - 0.3.3
     - Added [ Support for generated files](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/118)
 - 0.3.2
