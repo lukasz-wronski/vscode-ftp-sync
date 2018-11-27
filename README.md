@@ -31,6 +31,8 @@ Initializes a default FTP-Sync configuration file in the `.vscode` directory. Op
      *   "path": "", [e.g.] "/build",
      *   "extensionsToInclude": [] e.g. [".js", ".styl"]
 }
+- detailedSyncSummary - Display the number of each operation the sync will perform, i.e. "New Files: 7, Delete Files: 8, New Folders: 2". Otherwise will display the total number of operations, i.e. "Run all 17 operations now". Default is 'true'.
+
 
 ### Ftp-sync: Sync Local to Remote
 Displays a synchronization wizard to configure a sync operation that changes FTP files and folders to match project files.

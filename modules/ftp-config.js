@@ -34,7 +34,8 @@ module.exports = {
 			uploadOnSave: false,
 			extensionsToInclude: [],
 			path: ''
-		}
+		},
+		detailedSyncSummary: true
 	},
 	getConfig: function() {
 		var configjson = fs.readFileSync(this.getConfigPath()).toString();
@@ -82,7 +83,8 @@ module.exports = {
 			passphrase: config.passphrase,
 			agent: config.agent,
 			generatedFiles: config.generatedFiles,
-			debug: config.debug
+			debug: config.debug,
+			detailedSyncSummary: config.detailedSyncSummary
 		}
 	},
 	connectionChanged: function(oldConfig) {
