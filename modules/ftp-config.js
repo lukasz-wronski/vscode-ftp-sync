@@ -5,14 +5,17 @@ var _ = require("lodash");
 var upath = require("upath");
 
 module.exports = {
+	rootPath: function() {
+		return vscode.workspace.workspaceFolders[0].uri;
+	},
 	getConfigPath: function() {
 		return this.getConfigDir() + "/ftp-sync.json";
 	},
 	getConfigDir: function() {
-		return vscode.workspace.rootPath + "/.vscode";
+		return this.rootPath().path  + "/.vscode";
 	},
 	getGeneratedDir: function() {
-		return upath.join(vscode.workspace.rootPath, this.generatedFiles.path);
+		return upath.join(this.rootPath().path, this.generatedFiles.path);
 	},
 	defaultConfig: {
 		remotePath: "./",
@@ -52,7 +55,7 @@ module.exports = {
 		if(!fs.existsSync(this.getConfigPath())) {
 			var options = ["Create ftp-sync config now...", "Nah, forget about it..."];
 			var pick = vscode.window.showQuickPick(options, { placeHolder: "No configuration file found. Run Init command first." });
-			pick.then(function(answer) {
+			pick.then( function(answer) {
 				if(answer == options[0])
 					require("./init-command")();
 			})
@@ -62,10 +65,11 @@ module.exports = {
 		return true;
 	},
 	getSyncConfig: function() {
-		var config = this.getConfig();
+		let config = this.getConfig();
 		return {
 			getGeneratedDir: this.getGeneratedDir,
 			local: config.localPath,
+			root: config.rootPath,
 			remote: upath.toUnix(config.remotePath),
 			host: config.host,
 			port: config.port,

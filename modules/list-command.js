@@ -20,12 +20,12 @@ module.exports = function(fileUrl, getFtpSync) {
 		return;
 	}
 
-  if (!vscode.workspace.rootPath) {
+  if (!ftpconfig.rootPath().path) {
     vscode.window.showErrorMessage('Ftp-sync: Cannot init ftp-sync without opened folder');
     return;
   }
 
-  if (filePath.indexOf(vscode.workspace.rootPath) < 0) {
+  if (filePath.indexOf(ftpconfig.rootPath().path) < 0) {
     vscode.window.showErrorMessage('Ftp-sync: Selected file is not a part of the workspace.');
     return;
   }
@@ -36,7 +36,7 @@ module.exports = function(fileUrl, getFtpSync) {
     return;
   }
 
-  let remotePath = getFatherPath(filePath.replace(vscode.workspace.rootPath, config.remotePath));
+  let remotePath = getFatherPath(filePath.replace(ftpconfig.rootPath().path, config.remotePath));
   function listAllFiles(filesRemotePath) {
     getFtpSync().ListRemoteFilesByPath(filesRemotePath, function(err, files) {
       if (err) {
@@ -50,7 +50,7 @@ module.exports = function(fileUrl, getFtpSync) {
     });
   }
   function deleteFn(filePath) {
-    getFtpSync().deleteRemoteFile(filePath).then(result => {
+    getFtpSync().deleteRemoteFile(filePath).then(function(result) {
       vscode.window.setStatusBarMessage('Ftp-sync: Delete successfully!', STATUS_TIMEOUT);
     }).catch(err => {
       vscode.window.showErrorMessage('Ftp-sync: Delete failed: ' + err);
@@ -136,7 +136,7 @@ function getLabel(file) {
 }
 function getLocalPath(fileRemotePath) {
   return {
-    fsPath: fileRemotePath.replace(ftpconfig.getConfig().remotePath, vscode.workspace.rootPath)
+    fsPath: fileRemotePath.replace(ftpconfig.getConfig().remotePath, ftpconfig.rootPath().path)
   };
 }
 function getFatherPath(son) {

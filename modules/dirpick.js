@@ -1,6 +1,7 @@
 var vscode = require('vscode');
 var fs = require('fs');
 var path = require('path');
+var ftpconfig = require('./ftp-config');
 
 var getDirectories = function(srcpath) {
   return fs.readdirSync(srcpath).filter(function(file) {
@@ -13,7 +14,7 @@ var dirpick = function(callback, currentDir) {
 	var selectListPrefix = currentDir != "." ? ".." : "";
 	var options = [{ label: path.join(selectListPrefix, path.basename(currentDir)), description: "Choose this folder"}];
 	
-	getDirectories(path.join(vscode.workspace.rootPath, currentDir)).forEach(function(dir) {
+	getDirectories(path.join(ftpconfig.rootPath().path, currentDir)).forEach(function(dir) {
 		options.push(path.join(selectListPrefix, path.basename(currentDir), dir));
 	})
 	

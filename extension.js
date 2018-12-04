@@ -37,21 +37,21 @@ function activate(context) {
 	var currentConfig = getSyncHelper().getConfig();
 	if (currentConfig.generatedFiles.uploadOnSave) {
 		fsw = vscode.workspace.createFileSystemWatcher( currentConfig.getGeneratedDir() + '/**');
-		fsw.onDidChange(function(ev) {
+		fsw.onDidChange( function(ev) {
 			//an attempt to normalize onDidChange with onDidSaveTextDocument.
 			ev['uri'] = {fsPath: ev.fsPath};
 			onSave(ev, getSyncHelper);
 		})
-		fsw.onDidCreate(function(ev) {
+		fsw.onDidCreate( function(ev) {
 			ev['uri'] = {fsPath: ev.fsPath};
 			onSave(ev, getSyncHelper);
 		})
-		fsw.onDidDelete(function(ev) {
+		fsw.onDidDelete( function(ev) {
 			ev['uri'] = {fsPath: ev.fsPath};
 			onSave(ev, getSyncHelper);
 		})
 	}
-	vscode.workspace.onDidSaveTextDocument(function(file) {
+	vscode.workspace.onDidSaveTextDocument( function(file) {
 		onSave(file, getSyncHelper);
 	});
 
