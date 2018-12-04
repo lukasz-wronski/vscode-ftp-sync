@@ -101,7 +101,6 @@ var listRemoteFiles = function(
         });
       }
     });
-
     var finish = function() {
       result.forEach(function(item) {
         if (_.startsWith(item.name, originalRemotePath))
@@ -235,7 +234,6 @@ var listLocalFiles = function(localPath, rootPath, callback, options) {
   var files = [];
 
   if (localPath != rootPath) {
-
     fswalk.dirs(
       localPath,
       function(basedir, filename, stat, next) {
@@ -245,12 +243,12 @@ var listLocalFiles = function(localPath, rootPath, callback, options) {
         dirPath = dirPath.replace(localPath, "");
         dirPath = upath.toUnix(dirPath);
         if (dirPath[0] == "/") dirPath = dirPath.substr(1);
-          if (onPrepareLocalProgress) onPrepareLocalProgress(dirPath);
-          files.push({
-            name: dirPath,
-            size: stat.size,
-            isDir: stat.isDirectory()
-          });
+        if (onPrepareLocalProgress) onPrepareLocalProgress(dirPath);
+        files.push({
+          name: dirPath,
+          size: stat.size,
+          isDir: stat.isDirectory()
+        });
         next();
       },
       function(err) {
@@ -276,11 +274,11 @@ var listLocalFiles = function(localPath, rootPath, callback, options) {
         });
         next();
       },
-	  function(err) {
+      function(err) {
         callback(err, files);
       }
     );
-	}
+  }
   if (localPath === rootPath) {
     fswalk.walk(
       localPath,
@@ -362,7 +360,7 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
 
   callback(null, {
     _readMe:
-	  "Review list of sync operations, then use Ftp-sync: Commit command to accept changes. Note that if you're not in your root directory then all the parent directories will also be uploaded",
+      "Review list of sync operations, then use Ftp-sync: Commit command to accept changes. Note that if you're not in your root directory then all the parent directories will also be uploaded",
     _warning: "This file should not be saved, reopened review file won't work!",
     filesToUpdate: filesToUpdate,
     filesToAdd: filesToAdd,

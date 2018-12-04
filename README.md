@@ -73,7 +73,7 @@ Use at your own risk - I do not guarantee that it will work correctly!
 
 ## Version history
 - 0.3.6
-    - Added [Fix for broken uploadOnSave and subdirectories not adding properly]()
+    - Added [Fix for broken uploadOnSave and subdirectories not adding properly]
 - 0.3.5
     - Added [ Various enhancements (SCP Support, bug fixes, list command)](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/237)
     - Added [ List commands](https://github.com/lukasz-wronski/vscode-ftp-sync/pull/215)
