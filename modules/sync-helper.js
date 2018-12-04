@@ -233,13 +233,6 @@ var listLocalFiles = function(localPath, rootPath, callback, options) {
   output(getCurrentTime() + " > [ftp-sync] listLocalFiles:" + localPath);
 
   var files = [];
-  /* 	if (localPath != rootPath) {
-		var filePath = localPath;
-		filePath = filePath.replace(rootPath, "");
-		ftp.mkdir(filePath, function(err) {
-			callback(err);
-		}, true)
-	} */
 
   if (localPath != rootPath) {
 
@@ -251,7 +244,6 @@ var listLocalFiles = function(localPath, rootPath, callback, options) {
           return next();
         dirPath = dirPath.replace(localPath, "");
         dirPath = upath.toUnix(dirPath);
-        //dirPath = dirPath.split(path.sep);
         if (dirPath[0] == "/") dirPath = dirPath.substr(1);
           if (onPrepareLocalProgress) onPrepareLocalProgress(dirPath);
           files.push({
