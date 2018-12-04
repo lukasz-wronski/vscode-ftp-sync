@@ -1,9 +1,9 @@
 module.exports = function() {
     var self = this;
     
-    var Ftp = require('ftp');
-    var ftp = new Ftp();
-    var fs = require('fs');
+    const Ftp = require('ftp');
+    let ftp = new Ftp();
+    const fs = require('fs');
     
     self.connect = function(ftpConfig) {
         ftp.connect(ftpConfig);
@@ -54,8 +54,8 @@ module.exports = function() {
         ftp.put(local, remote, callback)
     }
     
-    self.mkdir = function(path, callback) {
-        ftp.mkdir(path, callback)
+    self.mkdir = function(path, callback, recursive = false) {
+        ftp.mkdir(path, recursive, callback)
     }
     
     self.delete = function(path, callback) {

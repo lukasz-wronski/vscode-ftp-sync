@@ -7,7 +7,7 @@ var upath = require("upath");
 
 module.exports = function(document, getFtpSync, skipOnSaveCheck) {
 
-	if(document.uri.fsPath.indexOf(vscode.workspace.rootPath) < 0)
+	if(document.uri.fsPath.indexOf(ftpconfig.rootPath().path) < 0)
 		return;
 
 	var config = ftpconfig.getConfig();
@@ -40,7 +40,7 @@ module.exports = function(document, getFtpSync, skipOnSaveCheck) {
 	var fileName = path.basename(document.uri.fsPath);
 	var uploadingStatus = vscode.window.setStatusBarMessage("Ftp-sync: Uploading " + fileName + " to FTP server...");
 
-	getFtpSync().uploadFile(document.uri.fsPath, vscode.workspace.rootPath, function(err) {
+	getFtpSync().uploadFile(document.uri.fsPath, ftpconfig.rootPath().path, function(err) {
 		uploadingStatus.dispose();
 		if(err)
 			vscode.window.showErrorMessage("Ftp-sync: Uploading " + fileName + " failed: " + err);

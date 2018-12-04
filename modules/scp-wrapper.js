@@ -90,8 +90,8 @@ module.exports = function () {
 		client.scp(local, Object.assign({}, config, { path: remote }), callback)
 	}
 
-	self.mkdir = function (remote, callback) {
-		client.mkdir(remote, callback);
+	self.mkdir = function (remote, callback, recursive = false) {
+		client.mkdir(remote, recursive, callback);
 	}
 
 	self.delete = function (remote, callback) {
