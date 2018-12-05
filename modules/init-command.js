@@ -4,7 +4,7 @@ var fs = require('fs');
 
 module.exports = function() {
 
-	if(!ftpconfig.rootPath().path) {
+	if(!ftpconfig.rootPath()) {
 		vscode.window.showErrorMessage("Ftp-sync: Cannot init ftp-sync without opened folder");
 		return;
 	}

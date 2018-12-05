@@ -14,7 +14,7 @@ var dirpick = function(callback, currentDir) {
 	var selectListPrefix = currentDir != "." ? ".." : "";
 	var options = [{ label: path.join(selectListPrefix, path.basename(currentDir)), description: "Choose this folder"}];
 	
-	getDirectories(path.join(ftpconfig.rootPath().path, currentDir)).forEach(function(dir) {
+	getDirectories(path.join(ftpconfig.rootPath(), currentDir)).forEach(function(dir) {
 		options.push(path.join(selectListPrefix, path.basename(currentDir), dir));
 	})
 	
