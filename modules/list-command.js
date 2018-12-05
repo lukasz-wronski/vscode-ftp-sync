@@ -20,12 +20,12 @@ module.exports = function(fileUrl, getFtpSync) {
 		return;
 	}
 
-  if (!ftpconfig.rootPath().path) {
+  if (!ftpconfig.rootPath()) {
     vscode.window.showErrorMessage('Ftp-sync: Cannot init ftp-sync without opened folder');
     return;
   }
 
-  if (filePath.indexOf(ftpconfig.rootPath().path) < 0) {
+  if (filePath.indexOf(ftpconfig.rootPath()) < 0) {
     vscode.window.showErrorMessage('Ftp-sync: Selected file is not a part of the workspace.');
     return;
   }
@@ -36,7 +36,7 @@ module.exports = function(fileUrl, getFtpSync) {
     return;
   }
 
-  let remotePath = getFatherPath(filePath.replace(ftpconfig.rootPath().path, config.remotePath));
+  let remotePath = getFatherPath(filePath.replace(ftpconfig.rootPath(), config.remotePath));
   function listAllFiles(filesRemotePath) {
     getFtpSync().ListRemoteFilesByPath(filesRemotePath, function(err, files) {
       if (err) {
@@ -136,7 +136,7 @@ function getLabel(file) {
 }
 function getLocalPath(fileRemotePath) {
   return {
-    fsPath: fileRemotePath.replace(ftpconfig.getConfig().remotePath, ftpconfig.rootPath().path)
+    fsPath: fileRemotePath.replace(ftpconfig.getConfig().remotePath, ftpconfig.rootPath())
   };
 }
 function getFatherPath(son) {
