@@ -1,9 +1,9 @@
 module.exports = function() {
     var self = this;
     
-    const Ftp = require('ftp');
-    let ftp = new Ftp();
-    const fs = require('fs');
+    var Ftp = require('ftp');
+    var ftp = new Ftp();
+    var fs = require('fs');
     
     self.connect = function(ftpConfig) {
         ftp.connect(ftpConfig);

@@ -6,16 +6,16 @@ var upath = require("upath");
 
 module.exports = {
 	rootPath: function() {
-		return vscode.workspace.workspaceFolders[0].uri.fsPath;
+		return vscode.workspace.workspaceFolders[0].uri;
 	},
 	getConfigPath: function() {
 		return this.getConfigDir() + "/ftp-sync.json";
 	},
 	getConfigDir: function() {
-		return this.rootPath()  + "/.vscode";
+		return this.rootPath().fsPath  + "/.vscode";
 	},
 	getGeneratedDir: function() {
-		return upath.join(this.rootPath(), this.generatedFiles.path);
+		return upath.join(this.rootPath().fsPath, this.generatedFiles.path);
 	},
 	defaultConfig: {
 		remotePath: "./",
@@ -86,7 +86,8 @@ module.exports = {
 			passphrase: config.passphrase,
 			agent: config.agent,
 			generatedFiles: config.generatedFiles,
-			debug: config.debug
+			debug: config.debug,
+			rootPath: this.rootPath
 		}
 	},
 	connectionChanged: function(oldConfig) {
