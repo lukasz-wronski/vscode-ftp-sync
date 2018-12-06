@@ -181,7 +181,7 @@ const listOneDeepRemoteFiles = function(remotePath, callback) {
         });
       }
     });
-    const finish = () => {
+    const finish = function() {
       result.forEach(function(item) {
         if (_.startsWith(item.name, remotePath)) {
           item.path = item.name;
@@ -198,7 +198,7 @@ const listOneDeepRemoteFiles = function(remotePath, callback) {
 };
 // the entry of list request
 const ListRemoteFilesByPath = function(remotePath, callback) {
-  connect(err => {
+  connect(function(err) {
     if (err) {
       callback(err);
       return;
@@ -208,7 +208,7 @@ const ListRemoteFilesByPath = function(remotePath, callback) {
 };
 const deleteRemoteFile = function(remoteFilePath) {
   return new Promise(function(resolve, reject) {
-    connect(err => {
+    connect(function(err) {
       if (err) {
         reject(err);
         return;
@@ -233,53 +233,53 @@ var listLocalFiles = function(localPath, rootPath, callback, options) {
 
   var files = [];
 
-  if (localPath != rootPath) {
-    fswalk.dirs(
-      localPath,
-      function(basedir, filename, stat, next) {
-        var dirPath = path.join(basedir, filename);
-        if (isIgnored(dirPath, ftpConfig.allow, ftpConfig.ignore))
-          return next();
-        dirPath = dirPath.replace(localPath, "");
-        dirPath = upath.toUnix(dirPath);
-        if (dirPath[0] == "/") dirPath = dirPath.substr(1);
-        if (onPrepareLocalProgress) onPrepareLocalProgress(dirPath);
-        files.push({
-          name: dirPath,
-          size: stat.size,
-          isDir: stat.isDirectory()
-        });
-        next();
-      },
-      function(err) {
-        callback(err, files);
-      }
-    );
-    fswalk.files(
-      localPath,
-      function(basedir, filename, stat, next) {
-        var filePath = path.join(basedir, filename);
-        //when listing localFiles by onPrepareLocalProgress, ignore localfile
-        if (isIgnored(filePath, ftpConfig.allow, ftpConfig.ignore))
-          return next();
-        filePath = filePath.replace(localPath, "");
-        filePath = upath.toUnix(filePath);
-        if (filePath[0] == "/") filePath = filePath.substr(1);
+  // if (localPath != rootPath) {
+  //   fswalk.dirs(
+  //     localPath,
+  //     function(basedir, filename, stat, next) {
+  //       var dirPath = path.join(basedir, filename);
+  //       if (isIgnored(dirPath, ftpConfig.allow, ftpConfig.ignore))
+  //         return next();
+  //       dirPath = dirPath.replace(localPath, "");
+  //       dirPath = upath.toUnix(dirPath);
+  //       if (dirPath[0] == "/") dirPath = dirPath.substr(1);
+  //       if (onPrepareLocalProgress) onPrepareLocalProgress(dirPath);
+  //       files.push({
+  //         name: dirPath,
+  //         size: stat.size,
+  //         isDir: stat.isDirectory()
+  //       });
+  //       next();
+  //     },
+  //     function(err) {
+  //       callback(err, files);
+  //     }
+  //   );
+  //   fswalk.files(
+  //     localPath,
+  //     function(basedir, filename, stat, next) {
+  //       var filePath = path.join(basedir, filename);
+  //       //when listing localFiles by onPrepareLocalProgress, ignore localfile
+  //       if (isIgnored(filePath, ftpConfig.allow, ftpConfig.ignore))
+  //         return next();
+  //       filePath = filePath.replace(localPath, "");
+  //       filePath = upath.toUnix(filePath);
+  //       if (filePath[0] == "/") filePath = filePath.substr(1);
 
-        if (onPrepareLocalProgress) onPrepareLocalProgress(filePath);
-        files.push({
-          name: filePath,
-          size: stat.size,
-          isDir: stat.isDirectory()
-        });
-        next();
-      },
-      function(err) {
-        callback(err, files);
-      }
-    );
-  }
-  if (localPath === rootPath) {
+  //       if (onPrepareLocalProgress) onPrepareLocalProgress(filePath);
+  //       files.push({
+  //         name: filePath,
+  //         size: stat.size,
+  //         isDir: stat.isDirectory()
+  //       });
+  //       next();
+  //     },
+  //     function(err) {
+  //       callback(err, files);
+  //     }
+  //   );
+  // }
+  // if (localPath === rootPath) {
     fswalk.walk(
       localPath,
       function(basedir, filename, stat, next) {
@@ -304,7 +304,7 @@ var listLocalFiles = function(localPath, rootPath, callback, options) {
       }
     );
   }
-};
+//};
 
 var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
   var from = options.upload ? localFiles : remoteFiles;
@@ -351,9 +351,9 @@ var prepareSyncObject = function(remoteFiles, localFiles, options, callback) {
     });
 
   if (options.mode == "full")
-    to.filter(toFile => {
+    to.filter(function(toFile) {
       return !toFile.wasOnFrom;
-    }).forEach(toFile => {
+    }).forEach(function(toFile) {
       if (toFile.isDir) dirsToRemove.push(toFile.name);
       else filesToRemove.push(toFile.name);
     });
@@ -582,7 +582,9 @@ var ensureDirExists = function(remoteDir, callback) {
       ensureDirExists(path.posix.join(remoteDir, ".."), function() {
         ensureDirExists(remoteDir, callback);
       });
-    } else if (_.some(list, f => f.name == path.basename(remoteDir))) {
+    } else if (_.some(list, f => {
+      return f.name == path.basename(remoteDir);
+    })) {
       callback();
     } else {
       ftp.mkdir(

@@ -12,7 +12,7 @@ module.exports = function(isUpload, getSyncHelper) {
 	
 	var showSyncSummary = function(sync, options) {
 		var syncJson = JSON.stringify(sync, null, 4);
-		var filePath = path.normalize(ftpconfig.rootPath() + "/.vscode/sync-summary-" + Math.floor(Date.now() / 1000) + ".json");
+		var filePath = path.normalize(ftpconfig.rootPath().fsPath + "/.vscode/sync-summary-" + Math.floor(Date.now() / 1000) + ".json");
 		var uri = vscode.Uri.parse("untitled:" + filePath);
         var prepareSyncDocument = vscode.workspace.openTextDocument(uri);
 		prepareSyncDocument.then(function(document) {
@@ -103,8 +103,8 @@ module.exports = function(isUpload, getSyncHelper) {
 			if(!result) return;
 			var syncOptions = {
 				remotePath: path.join(getSyncHelper().getConfig().remote, dirPath),
-				localPath: path.join(ftpconfig.rootPath(), dirPath),
-				rootPath: ftpconfig.rootPath(),
+				localPath: path.join(ftpconfig.rootPath().fsPath, dirPath),
+				rootPath: ftpconfig.rootPath().fsPath,
 				upload: isUpload,
 				mode: result.mode
 			};

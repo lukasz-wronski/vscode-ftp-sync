@@ -18,12 +18,12 @@ module.exports = function(fileUrl, getFtpSync) {
 		return;
 	}
 
-	if (!ftpconfig.rootPath()) {
+	if (!ftpconfig.rootPath().fsPath) {
 		vscode.window.showErrorMessage("Ftp-sync: Cannot init ftp-sync without opened folder");
 		return;
 	}
 
-	if (filePath.indexOf(ftpconfig.rootPath()) < 0) {
+	if (filePath.indexOf(ftpconfig.rootPath().fsPath) < 0) {
 		vscode.window.showErrorMessage("Ftp-sync: Selected file is not a part of the workspace.");
 		return;
 	}
@@ -36,7 +36,7 @@ module.exports = function(fileUrl, getFtpSync) {
 
 	var fileName = path.basename(filePath);
 	var downloadStatus = vscode.window.setStatusBarMessage("Ftp-sync: Downloading " + fileName + " from FTP server...", STATUS_TIMEOUT);
-	getFtpSync().downloadFile(filePath, ftpconfig.rootPath(), function(err) {
+	getFtpSync().downloadFile(filePath, ftpconfig.rootPath().fsPath, function(err) {
 		downloadStatus.dispose();
 		if (err)
 			vscode.window.showErrorMessage("Ftp-sync: Downloading " + fileName + " failed: " + err);

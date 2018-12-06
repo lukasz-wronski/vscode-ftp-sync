@@ -1,6 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-var vscode = require('vscode');
+var vscode = require('vscode')
 
 global.STATUS_TIMEOUT = 3000;
 
@@ -37,23 +37,25 @@ function activate(context) {
 	var currentConfig = getSyncHelper().getConfig();
 	if (currentConfig.generatedFiles.uploadOnSave) {
 		fsw = vscode.workspace.createFileSystemWatcher( currentConfig.getGeneratedDir() + '/**');
-		fsw.onDidChange( function(ev) {
+		fsw.onDidChange(function(ev) {
 			//an attempt to normalize onDidChange with onDidSaveTextDocument.
 			ev['uri'] = {fsPath: ev.fsPath};
 			onSave(ev, getSyncHelper);
 		})
-		fsw.onDidCreate( function(ev) {
+		fsw.onDidCreate(function(ev) {
 			ev['uri'] = {fsPath: ev.fsPath};
 			onSave(ev, getSyncHelper);
 		})
-		fsw.onDidDelete( function(ev) {
+		fsw.onDidDelete(function(ev) {
 			ev['uri'] = {fsPath: ev.fsPath};
 			onSave(ev, getSyncHelper);
 		})
 	}
+	
 	vscode.workspace.onDidSaveTextDocument( function(file) {
 		onSave(file, getSyncHelper);
 	});
+
 
 	context.subscriptions.push(initCommand);
 	context.subscriptions.push(syncCommand);
