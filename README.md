@@ -28,10 +28,9 @@ Initializes a default FTP-Sync configuration file in the `.vscode` directory. Op
 - agent - Specifies the ssh-agent to use for SFTP. The default is `null`.
 - allow - An array of escaped regular expression strings specifying paths which are allowed. If nonempty, unless a path matches any of these regular expressions it will not be included in the sync. Default value is empty, implying everything is allowed.
 - ignore - An array of escaped regular expression strings specifying paths to ignore. If a path matches any of these regular expressions then it will not be included in the sync. Default values are `"\\.git"`, `"\\.vscode"` and `".DS_Store"`.
-- generatedFiles: - Automatically upload freshly generated files. Path and extensionsToInclude have to be specified for this feature to work.
+- generatedFiles: - Automatically upload freshly generated files. Also uploads files that are deleted. Path and extensionsToInclude have to be specified for this feature to work.
   - path: "" - This specifies the path to the directory where the files are, [e.g.] "/build",
   - extensionsToInclude: [""] e.g. [".js", ".css"] - Array of strings specifying what extensions to add for auto-upload. Default is "" which means that it will automatically upload files of all extensions.
-    }
 
 ### Ftp-sync: Sync Local to Remote
 
