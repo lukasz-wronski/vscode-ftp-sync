@@ -11,10 +11,7 @@ module.exports = function(document, getFtpSync, skipOnSaveCheck) {
   var config = ftpconfig.getConfig();
 
   //Should we bother to check for generated file uploads? (also check if the generated files path is set otherwise skip)
-  if (
-    config.generatedFiles.extensionsToInclude.length > 0 &&
-    config.generatedFiles.path != ""
-  ) {
+  if (config.generatedFiles.extensionsToInclude.length > 0) {
     //If it's not an auto uploaded generated file it won't start with that directory
     if (
       !upath.normalize(path.dirname(document.uri.fsPath)).startsWith(
