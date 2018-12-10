@@ -71,15 +71,15 @@ function activate(context) {
   var onGenerate = require("./modules/on-generate");
 
   var currentConfig = getSyncHelper().getConfig();
-  if (currentConfig.generatedFiles.uploadOnSave) {
+  if (currentConfig.generatedFiles.extensionsToInclude.length > 0) {
     fsw = vscode.workspace.createFileSystemWatcher(
       currentConfig.getGeneratedDir() + "/**"
     );
-    // fsw.onDidChange(function(ev) {
-    // 	//an attempt to normalize onDidChange with onDidSaveTextDocument.
-    // 	ev['uri'] = {fsPath: ev.fsPath};
-    // 	onSave(ev, getSyncHelper);
-    // })
+    fsw.onDidChange(function(ev) {
+      //an attempt to normalize onDidChange with onDidSaveTextDocument.
+      ev["uri"] = { fsPath: ev.fsPath };
+      onGenerate(ev, getSyncHelper);
+    });
     fsw.onDidCreate(function(ev) {
       ev["uri"] = { fsPath: ev.fsPath };
       onGenerate(ev, getSyncHelper);
