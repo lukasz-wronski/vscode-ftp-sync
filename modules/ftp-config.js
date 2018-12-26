@@ -34,7 +34,7 @@ module.exports = {
     allow: [],
     ignore: ["\\.vscode", "\\.git", "\\.DS_Store"],
     generatedFiles: {
-      extensionsToInclude: [""],
+      extensionsToInclude: [],
       path: ""
     }
   },
