@@ -30,7 +30,13 @@ module.exports = function() {
     }
     
     self.list = function(path, callback) {
-        ftp.list(path, callback);
+        ftp.list(path, function(err, remoteFiles) {
+            for(var fileInfo of remoteFiles) {
+                fileInfo.name = decodeURIComponent(escape(fileInfo.name))
+            }
+            if(callback)
+                callback(err, remoteFiles)
+        });
     }
     
     self.get = function(remotePath, localPath, callback) {
