@@ -6,8 +6,9 @@ This extension allows you to easily synchronise your local workspace (project fi
 
 ## Usage
 
-There are four commands available. You can access them from the command palette (Ctrl+Shift+P on Windows/Linux).
+There are four commands available. You can access them from the command palette (Ctrl+Shift+P on Windows/Linux) by typing **Ftp-sync**.
 
+### Single page sync
 You can also sync a single file by right-clicking on it in the left menu and using the "Ftp-sync: Upload File" and "Ftp-sync: Download File" commands.
 
 ### Ftp-sync: Init
