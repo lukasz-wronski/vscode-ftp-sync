@@ -9,7 +9,12 @@ module.exports = function(document, getFtpSync, skipOnSaveCheck) {
   if (document.uri.fsPath.indexOf(ftpconfig.rootPath().fsPath) < 0) return;
 
   var config = ftpconfig.getConfig();
-
+  
+  // Based on issue https://github.com/lukasz-wronski/vscode-ftp-sync/issues/307
+  if (!config.uploadOnSave && !skipOnSaveCheck) {
+    return;
+  };
+  
   //Should we bother to check for generated file uploads? (also check if the generated files path is set otherwise skip)
   if (config.generatedFiles.extensionsToInclude.length > 0) {
     //If it's not an auto uploaded generated file it won't start with that directory
