@@ -88,11 +88,22 @@ module.exports = {
       protocol: config.protocol || "ftp",
       privateKeyPath: config.privateKeyPath,
       passphrase: config.passphrase,
-      agent: config.agent,
+      agent: this.resolveConfigValue(config.agent),
       generatedFiles: config.generatedFiles,
       debug: config.debug,
       rootPath: this.rootPath
     };
+  },
+  resolveConfigValue: function(value) {
+    if (typeof value !== 'string') {
+      return value;
+    }
+    if (value.charAt(0) === '$') {
+      // resolve as an environment variable
+      let envVar = value.substr(1);
+      return process.env[envVar];
+    }
+    return value;
   },
   connectionChanged: function(oldConfig) {
     var config = this.getSyncConfig();
